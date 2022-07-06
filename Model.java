@@ -1,0 +1,133 @@
+
+import java.io.File;
+import java.util.Scanner;
+import java.io.PrintWriter;
+import java.util.HashMap;
+
+class Model{
+    private Pet pet;
+    private String petSaveFilename = "petSave.txt";
+    private long time;
+
+    public Model(){
+        pet = null;
+        time = System.currentTimeMillis();
+    }
+
+    public void update(){
+        time = System.currentTimeMillis();
+        if (pet != null){
+            pet.update();
+        }
+    }
+
+
+    // Pet saving and loading
+    /*
+        The petSave.txt file should follow the following structure:
+        type
+        name
+        age
+        hunger
+    */
+    public boolean savePet(){
+        File file = new File(petSaveFilename);
+        PrintWriter writer = null;
+
+        try{
+            writer = new PrintWriter(file);
+        }
+        catch(Exception e){
+            // FileNotFoundException
+            return false;
+        }
+
+        writer.print(pet.getSaveFormat());
+        writer.flush();
+
+        return true;
+    }
+
+    public boolean loadPet(){
+        File file = new File(petSaveFilename);
+        Scanner scanner = null;
+
+        try{
+            scanner = new Scanner(file);
+        }
+        catch(Exception e){
+            // FileNotFoundException
+            return false;
+        }
+
+        HashMap<String, Object> stats = new HashMap<>();
+        String type = "";
+        String name = "";
+        long birthtime = 0;
+        long lastTimeCheck = 0;
+        float hunger = 0;
+        long lastFed = 0;
+
+        try{
+            // type = scanner.nextLine();
+            // name = scanner.nextLine();
+            // birthtime = Long.parseLong(scanner.nextLine());
+            // lastTimeCheck = Long.parseLong(scanner.nextLine());
+            // hunger = Float.parseFloat(scanner.nextLine());
+            // lastFed = Long.parseLong(scanner.nextLine());
+            stats.put("type", scanner.nextLine());
+            stats.put("name", scanner.nextLine());
+            stats.put("birthtime", Long.parseLong(scanner.nextLine()));
+            stats.put("lastTimeCheck", Long.parseLong(scanner.nextLine()));
+            stats.put("hunger",  Float.parseFloat(scanner.nextLine()));
+            stats.put("lastFed",  Long.parseLong(scanner.nextLine()));
+        }
+        catch(Exception e){
+            System.out.println("Couldn't get the next line in reading the " + file + " file.");
+            return false;
+        }
+        // // Put the stats in the hashmap
+        // stats.put("type", type);
+        // stats.put("name", name);
+        // stats.put("birthtime", birthtime);
+        // stats.put("lastTimeCheck", lastTimeCheck);
+        // stats.put("hunger", hunger);
+        // stats.put("lastFed", lastFed);
+
+        if (! makePet(stats)){
+            System.out.println("Couldn't make pet of type " + type);
+            return false;
+        }
+
+        return true;
+    }
+
+    private boolean makePet(String type, String name, long birthtime, float hunger){
+        if (type.equals("TestPet01")){
+            pet = new TestPet01(name, birthtime, hunger);
+            pet.setModel(this);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean makePet(HashMap<String, Object> stats){
+        if (stats.get("type").equals("TestPet01")){
+            pet = new TestPet01(stats);
+            pet.setModel(this);
+            return true;
+        }
+        return false;
+    }
+
+
+    // Get and set methods
+
+    public Pet getPet(){
+        return pet;
+    }
+
+    public long getTime(){
+        return time;
+    }
+}
