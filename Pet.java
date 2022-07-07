@@ -9,15 +9,25 @@ abstract class Pet{
     private Random random;
 
     private String name;
-    private long birthtime, age, maxAge;
     private long babyTime, childTime, adultTime;
     private String type = "";
+    private String stage = "";
     private int[] eggLayingTimes;
+
+    // Health stuff
+    private boolean alive, starving, full;
+    private long birthtime, age, maxAge;
+    private long totalTimeStarving;
+    private long totalTimeFull;
+    private float starveThreshold, fullThreshold;
 
     // Hunger
     private float hunger, maxHunger;
     private long hungerCounter, millisSinceFed, lastFed;
 
+    // Other
+    private long timesADay;
+    private long step;
     private long lastTimeCheck;
 
     /*
@@ -53,11 +63,26 @@ abstract class Pet{
         this.birthtime = (long)stats.get("birthtime");
         this.age = 0;
         this.lastTimeCheck = (long)stats.get("lastTimeCheck");
+        // Health
+        alive = (boolean)stats.get("alive");
+        starveThreshold = 20;
+        fullThreshold = 80;
+        totalTimeStarving = (long)stats.get("totalTimeStarving");
+        totalTimeFull = (long)stats.get("totalTimeFull");
         // Hunger
         this.hunger = (float)stats.get("hunger");
         lastFed = (long)stats.get("lastFed");
         millisSinceFed = System.currentTimeMillis() - lastFed;
         hungerCounter = System.currentTimeMillis() - lastTimeCheck;
+
+        // Other
+        /*
+        Todo:
+        I wanna do the math and display how I increase the hunger more
+        clearly later
+        */
+        timesADay = 10000;
+        step = 86400000 / timesADay;
 
 
         //setEggLayingTimes(3);
@@ -76,6 +101,15 @@ abstract class Pet{
         lastTimeCheck = currentTime;
     }
 
+    public void catchUp(){
+        /*
+        Todo:
+        Here I could do everything that needs to be done to catch up with the
+        time that has passed while you've been away
+        stuff like counting up hunger and all that shit.
+        */
+    }
+
     public void setModel(Model model){
         this.model = model;
 
@@ -86,11 +120,14 @@ abstract class Pet{
         String string = "";
         string += "Type: " + type;
         string += "\nName: " + name;
+        string += "\nAlive: " + alive;
         string += "\nBirthtime: " + birthtime;
         string += "\nLast Timecheck: " + lastTimeCheck;
         string += "\nLastFed: " + lastFed;
         // string += "\nTime since last fed: " + TimeConverter.toString(hungerCounter) + " : " + hungerCounter;
         string += "\nHunger: " + hunger;
+        string += "\nTotal time starving: " + TimeConverter.toString(totalTimeStarving) + " : " + totalTimeStarving;
+        string += "\nTotal time full: " + TimeConverter.toString(totalTimeFull) + " : " + totalTimeFull;
         string += "\nAge: " + TimeConverter.toString(age);
         string += "\nDays: " + getAgeInDays() + " Hours: " + getAgeInHours() + " Minutes: " + getAgeInMinutes() + " Seconds: " + getAgeInSeconds() + " Millis: " + age;
 
@@ -101,10 +138,13 @@ abstract class Pet{
         String string = "";
         string += type;
         string += "\n" + name;
+        string += "\n" + alive;
         string += "\n" + birthtime;
         string += "\n" + lastTimeCheck;
         string += "\n" + hunger;
         string += "\n" + lastFed;
+        string += "\n" + totalTimeStarving;
+        string += "\n" + totalTimeFull;
 
         return string;
     }
@@ -149,26 +189,30 @@ abstract class Pet{
 
     // Hunger stuff
     private void checkHunger(){
+        hungerCounter += model.getTime() - lastTimeCheck;
+
         /*
-        Todo:
-            I wanna do the math and display how I increase the hunger more
-            clearly later
+            Here I can do a calculation in stead of a while loop to save some
+            time if you've been away for a long time
+            Might have to keep it like this to figure out how long they have
+            been starving or full
         */
-        long timesADay = 10000;
-        long step = 86400000 / timesADay;
-        // long interval = System.currentTimeMillis() - lastTimeCheck;
-
-
-        hungerCounter += model.getTime() - lastTimeCheck;  // Here is the issue for tomorrow *****************************************
-        // millisSinceFed += model.getTime() - lastTimeCheck;
-        // System.out.println(millisSinceFed + " += " + model.getTime() + " - " + lastTimeCheck);
-        // System.out.println(millisSinceFed);
-
-        while (hungerCounter >= step){    // 24 hours in milliseconds divided by 1000
+        while (hungerCounter >= step){
             hunger -= 100.0 / (float)timesADay;
             hungerCounter -= step;
+
+            checkFoodStatus();
         }
 
+    }
+
+    private void checkFoodStatus(){
+        if (hunger < starveThreshold){
+            totalTimeStarving += step;
+        }
+        else if (hunger > fullThreshold){
+            totalTimeFull += step;
+        }
     }
 
     public void eat(Consumable food){

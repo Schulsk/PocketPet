@@ -61,41 +61,25 @@ class Model{
         }
 
         HashMap<String, Object> stats = new HashMap<>();
-        String type = "";
-        String name = "";
-        long birthtime = 0;
-        long lastTimeCheck = 0;
-        float hunger = 0;
-        long lastFed = 0;
 
         try{
-            // type = scanner.nextLine();
-            // name = scanner.nextLine();
-            // birthtime = Long.parseLong(scanner.nextLine());
-            // lastTimeCheck = Long.parseLong(scanner.nextLine());
-            // hunger = Float.parseFloat(scanner.nextLine());
-            // lastFed = Long.parseLong(scanner.nextLine());
             stats.put("type", scanner.nextLine());
             stats.put("name", scanner.nextLine());
+            stats.put("alive", Boolean.parseBoolean(scanner.nextLine()));
             stats.put("birthtime", Long.parseLong(scanner.nextLine()));
             stats.put("lastTimeCheck", Long.parseLong(scanner.nextLine()));
-            stats.put("hunger",  Float.parseFloat(scanner.nextLine()));
-            stats.put("lastFed",  Long.parseLong(scanner.nextLine()));
+            stats.put("hunger", Float.parseFloat(scanner.nextLine()));
+            stats.put("lastFed", Long.parseLong(scanner.nextLine()));
+            stats.put("totalTimeStarving", Long.parseLong(scanner.nextLine()));
+            stats.put("totalTimeFull", Long.parseLong(scanner.nextLine()));
         }
         catch(Exception e){
             System.out.println("Couldn't get the next line in reading the " + file + " file.");
             return false;
         }
-        // // Put the stats in the hashmap
-        // stats.put("type", type);
-        // stats.put("name", name);
-        // stats.put("birthtime", birthtime);
-        // stats.put("lastTimeCheck", lastTimeCheck);
-        // stats.put("hunger", hunger);
-        // stats.put("lastFed", lastFed);
 
         if (! makePet(stats)){
-            System.out.println("Couldn't make pet of type " + type);
+            System.out.println("Couldn't make pet of type " + stats.get("type"));
             return false;
         }
 
