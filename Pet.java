@@ -88,6 +88,9 @@ abstract class Pet{
 
 
         //setEggLayingTimes(3);
+
+        // Do catchup in case player has been gone for a while
+        catchUp();
     }
 
     // Update
@@ -112,11 +115,36 @@ abstract class Pet{
         time that has passed while you've been away
         stuff like counting up hunger and all that shit.
         */
+        long catchUpCounter = 0;
+        long currentTime = System.currentTimeMillis();
+        long simulatedTime = lastTimeCheck + catchUpCounter;
+        age = lastTimeCheck - birthtime;
+
+        while (simulatedTime <= currentTime){
+            // Working here at the moment ------------------------------------------------------------------------------
+            // Hunger
+            hunger -= 100.0 / (float)timesADay;
+
+            checkFoodStatus();
+
+            // Check for death
+            if (hunger <= 0){
+                die();
+                hunger = 0;
+            }
+
+            // Aging
+            if (alive){
+                age += step;
+            }
+
+            // Finally
+            simulatedTime += step;
+        }
     }
 
     public void setModel(Model model){
         this.model = model;
-
     }
 
     @Override
@@ -250,7 +278,7 @@ abstract class Pet{
         }
 
         alive = false;
-        deathtime = model.getTime();
+        deathtime = birthtime + age;
     }
 
 
