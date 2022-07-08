@@ -63,10 +63,20 @@ class Model{
         HashMap<String, Object> stats = new HashMap<>();
 
         try{
+            /*
+            TODO:
+            I think I wanna make this saving system a little different
+            I might make it so that each line starts with the name of the
+            variable, then the value. Then I can just make the loading happen
+            with a simple loop.
+            Pros: changes will no longer have to be made here when I add more
+            variables
+            */
             stats.put("type", scanner.nextLine());
             stats.put("name", scanner.nextLine());
             stats.put("alive", Boolean.parseBoolean(scanner.nextLine()));
             stats.put("birthtime", Long.parseLong(scanner.nextLine()));
+            stats.put("deathtime", Long.parseLong(scanner.nextLine()));
             stats.put("lastTimeCheck", Long.parseLong(scanner.nextLine()));
             stats.put("hunger", Float.parseFloat(scanner.nextLine()));
             stats.put("lastFed", Long.parseLong(scanner.nextLine()));

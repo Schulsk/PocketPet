@@ -16,7 +16,8 @@ abstract class Pet{
 
     // Health stuff
     private boolean alive, starving, full;
-    private long birthtime, age, maxAge;
+    private long birthtime, deathtime, age;
+    protected long maxAge;
     private long totalTimeStarving;
     private long totalTimeFull;
     private float starveThreshold, fullThreshold;
@@ -61,6 +62,7 @@ abstract class Pet{
         this.name = (String)stats.get("name");
         // Time
         this.birthtime = (long)stats.get("birthtime");
+        deathtime = (long)stats.get("deathtime");
         this.age = 0;
         this.lastTimeCheck = (long)stats.get("lastTimeCheck");
         // Health
@@ -91,11 +93,13 @@ abstract class Pet{
     // Update
     public void update(){
         long currentTime = model.getTime();
-        calculateAge();
-        // Todo: Check if too old
+        if (alive){
+            calculateAge();
+            // Todo: Check if too old
 
-        // Hunger
-        checkHunger();
+            // Hunger
+            checkHunger();
+        }
 
         // Last thing
         lastTimeCheck = currentTime;
@@ -121,6 +125,10 @@ abstract class Pet{
         string += "Type: " + type;
         string += "\nName: " + name;
         string += "\nAlive: " + alive;
+        if (!alive){
+            string += "\nDeathtime: " + deathtime;
+            string += "\nTotal time dead: " + TimeConverter.toString(model.getTime() - deathtime);
+        }
         string += "\nBirthtime: " + birthtime;
         string += "\nLast Timecheck: " + lastTimeCheck;
         string += "\nLastFed: " + lastFed;
@@ -135,11 +143,13 @@ abstract class Pet{
     }
 
     public String getSaveFormat(){
+        // Any changes made here must also be made in Model.java in the loadPet method
         String string = "";
         string += type;
         string += "\n" + name;
         string += "\n" + alive;
         string += "\n" + birthtime;
+        string += "\n" + deathtime;
         string += "\n" + lastTimeCheck;
         string += "\n" + hunger;
         string += "\n" + lastFed;
@@ -202,6 +212,12 @@ abstract class Pet{
             hungerCounter -= step;
 
             checkFoodStatus();
+
+            // Check for death
+            if (hunger <= 0){
+                die();
+                hunger = 0;
+            }
         }
 
     }
@@ -216,11 +232,25 @@ abstract class Pet{
     }
 
     public void eat(Consumable food){
+        if (!alive){
+            return;
+        }
         hunger += food.consume();
         if (hunger > maxHunger){
             hunger = maxHunger;
         }
         lastFed = model.getTime();
+    }
+
+
+    // Health stuff
+    private void die(){
+        if (!alive){
+            return;
+        }
+
+        alive = false;
+        deathtime = model.getTime();
     }
 
 

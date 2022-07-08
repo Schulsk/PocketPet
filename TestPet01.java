@@ -12,5 +12,6 @@ class TestPet01 extends Pet{
     public TestPet01(HashMap<String, Object> stats){
         super(stats);
         setType("TestPet01");
+        maxAge = 500;
     }
 }
