@@ -115,9 +115,8 @@ abstract class Pet{
         time that has passed while you've been away
         stuff like counting up hunger and all that shit.
         */
-        long catchUpCounter = 0;
         long currentTime = System.currentTimeMillis();
-        long simulatedTime = lastTimeCheck + catchUpCounter;
+        long simulatedTime = lastTimeCheck;
         age = lastTimeCheck - birthtime;
 
         while (simulatedTime <= currentTime){
@@ -235,6 +234,9 @@ abstract class Pet{
             Might have to keep it like this to figure out how long they have
             been starving or full
         */
+
+        // This is like this because the update call might be of different
+        // intervals, and I'm too drunk too think straight right now.
         while (hungerCounter >= step){
             hunger -= 100.0 / (float)timesADay;
             hungerCounter -= step;
