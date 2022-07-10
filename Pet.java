@@ -12,7 +12,7 @@ abstract class Pet{
     private long babyTime, childTime, adultTime;
     private String type = "";
     private String stage = "";
-    private int[] eggLayingTimes;
+    private double[] eggLayingTimes;    // Percentages of the adult stage's max
 
     // Health stuff
     private boolean alive, starving, full;
@@ -20,7 +20,7 @@ abstract class Pet{
     protected long maxAge;
     private long totalTimeStarving;
     private long totalTimeFull;
-    private float starveThreshold, fullThreshold;
+    private double starveThreshold, fullThreshold;       // Percent %
 
     // Hunger
     private float hunger, maxHunger;
@@ -30,6 +30,9 @@ abstract class Pet{
     private long timesADay;
     private long step;
     private long lastTimeCheck;
+    private String parent;
+    private String child;
+    //private HashMap<String, Pet> children;
 
     /*
     Maybe make seperate overloads of the constructor that are made for loading
@@ -52,27 +55,28 @@ abstract class Pet{
 
         //setEggLayingTimes();
     }
+
     public Pet(HashMap<String, Object> stats){
         System.out.println("Made pet with stats");
         random = new Random();
 
-        this.maxAge = 90;   // In hours
-        this.maxHunger = 100;
+        maxAge = 90;   // In milliseconds
+        maxHunger = 100;
 
-        this.name = (String)stats.get("name");
+        name = (String)stats.get("name");
         // Time
-        this.birthtime = (long)stats.get("birthtime");
+        birthtime = (long)stats.get("birthtime");
         deathtime = (long)stats.get("deathtime");
-        this.age = 0;
-        this.lastTimeCheck = (long)stats.get("lastTimeCheck");
+        age = 0;
+        lastTimeCheck = (long)stats.get("lastTimeCheck");
         // Health
         alive = (boolean)stats.get("alive");
-        starveThreshold = 20;
-        fullThreshold = 80;
+        starveThreshold = 0.2;
+        fullThreshold = 0.8;
         totalTimeStarving = (long)stats.get("totalTimeStarving");
         totalTimeFull = (long)stats.get("totalTimeFull");
         // Hunger
-        this.hunger = (float)stats.get("hunger");
+        hunger = (float)stats.get("hunger");
         lastFed = (long)stats.get("lastFed");
         millisSinceFed = System.currentTimeMillis() - lastFed;
         hungerCounter = System.currentTimeMillis() - lastTimeCheck;
@@ -85,6 +89,8 @@ abstract class Pet{
         */
         timesADay = 10000;
         step = 86400000 / timesADay;
+        parent = (String)stats.get("parent");
+        child = (String)stats.get("child");
 
 
         //setEggLayingTimes(3);
@@ -109,6 +115,13 @@ abstract class Pet{
     }
 
     public void catchUp(){
+        // I am reconsidering the way I have done this whole catchUp method now.
+        // I think I should have rather made the update and everything in it
+        // not depend on the current time from the system call, but rather use
+        // either a time interval that is passed as an argument, or that is
+        // predetermined in a constant. That way, I could just choose how many
+        // times I shoud call the update method in  the catchUp  method and it
+        // should all work just fine.
         /*
         Todo:
         Here I could do everything that needs to be done to catch up with the
@@ -120,11 +133,10 @@ abstract class Pet{
         age = lastTimeCheck - birthtime;
 
         while (simulatedTime <= currentTime){
-            // Working here at the moment ------------------------------------------------------------------------------
+            // I think I'm done here now...
             // Hunger
             hunger -= 100.0 / (float)timesADay;
 
-            checkFoodStatus();
 
             // Check for death
             if (hunger <= 0){
@@ -137,7 +149,15 @@ abstract class Pet{
                 age += step;
             }
 
+            // Check for death by old age
+            /*
+            Todo
+            */
+
             // Finally
+            if (alive){
+                checkFoodStatus();
+            }
             simulatedTime += step;
         }
     }
@@ -253,10 +273,10 @@ abstract class Pet{
     }
 
     private void checkFoodStatus(){
-        if (hunger < starveThreshold){
+        if (hunger < maxHunger * starveThreshold){
             totalTimeStarving += step;
         }
-        else if (hunger > fullThreshold){
+        else if (hunger > maxHunger * fullThreshold){
             totalTimeFull += step;
         }
     }
@@ -286,10 +306,29 @@ abstract class Pet{
 
     // Get and set
     private void setEggLayingTimes(int eggNumber){
-        eggLayingTimes = new int[eggNumber];
+        eggLayingTimes = new double[eggNumber];
         for (int i = 0; i < eggNumber; i++){
-            eggLayingTimes[i] = random.nextInt();
+            eggLayingTimes[i] = random.nextDouble();
+            if (i > 0){
+                while (eggLayingTimes[i] <= eggLayingTimes[i-1]){
+                    eggLayingTimes[i] = random.nextDouble();
+                }
+            }
         }
     }
+
+    public String getName(){
+        return name;
+    }
+
+
+
+
+    /*
+    Known problems:
+        * When you load a pet thet is dead, it recalculates the age as if it is
+        alive. When you load a pet that dies during catchUp, age is calculated
+        as it should.
+    */
 
 }

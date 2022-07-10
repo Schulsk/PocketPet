@@ -5,11 +5,16 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 
 class Model{
+    private static int petCounter;
+
+    private File savefile = new File("savefile.txt");
     private Pet pet;
     private String petSaveFilename = "petSave.txt";
     private long time;
 
     public Model(){
+        petCounter = 0;
+
         pet = null;
         time = System.currentTimeMillis();
     }
@@ -19,6 +24,44 @@ class Model{
         if (pet != null){
             pet.update();
         }
+    }
+
+    // Saving and loaging
+    public boolean saveData(){
+        PrintWriter writer = null;
+        try{
+            writer = new PrintWriter(savefile);
+        }
+        catch (Exception e){
+            return false;
+        }
+        if (!savePet()){
+            return false;
+        }
+
+        writer.print(petSaveFilename);
+        writer.flush();
+        writer.close();
+
+        return true;
+    }
+
+    public boolean loadData(){
+        Scanner scanner = null;
+        try{
+            scanner = new Scanner(savefile);
+        }
+        catch (Exception e){
+            // todo
+            return false;
+        }
+        petSaveFilename = scanner.nextLine();
+
+        if (!loadPet()){
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -31,6 +74,11 @@ class Model{
         hunger
     */
     public boolean savePet(){
+        if (pet == null){
+            System.out.println("No pet to save");
+            return false;
+        }
+        petSaveFilename = petCounter + "_" + pet.getName() + ".txt";
         File file = new File(petSaveFilename);
         PrintWriter writer = null;
 
@@ -82,6 +130,8 @@ class Model{
             stats.put("lastFed", Long.parseLong(scanner.nextLine()));
             stats.put("totalTimeStarving", Long.parseLong(scanner.nextLine()));
             stats.put("totalTimeFull", Long.parseLong(scanner.nextLine()));
+            stats.put("parent", scanner.nextLine());
+            stats.put("child", scanner.nextLine());
         }
         catch(Exception e){
             System.out.println("Couldn't get the next line in reading the " + file + " file.");
