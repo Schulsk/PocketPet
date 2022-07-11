@@ -34,7 +34,14 @@ abstract class Pet{
     private String[] children = new String[3];
     //private HashMap<String, Pet> children;
 
+    // Creating a new pet
+    public Pet(){
 
+    }
+    // Loading a pet from file
+    /*
+    Maybe I should have had the Pet class deal with the reading of the file as well?
+    */
     public Pet(HashMap<String, String> stats){
         System.out.println("Made pet with stats");
         random = new Random();
