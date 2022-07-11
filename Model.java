@@ -108,9 +108,20 @@ class Model{
             return false;
         }
 
-        HashMap<String, Object> stats = new HashMap<>();
+        HashMap<String, String> stats = new HashMap<>();
 
         try{
+            // An attempt to make a loopable readable file with variable names and data
+            String line = "";
+            String[] parts;
+            while (scanner.hasNext()){
+                line = scanner.nextLine();
+                parts = line.split(" ");
+                stats.put(parts[0], parts[1]);
+
+                // This part is in case I want to have several children
+
+            }
             /*
             TODO:
             I think I wanna make this saving system a little different
@@ -120,6 +131,8 @@ class Model{
             Pros: changes will no longer have to be made here when I add more
             variables
             */
+
+            /*
             stats.put("type", scanner.nextLine());
             stats.put("name", scanner.nextLine());
             stats.put("alive", Boolean.parseBoolean(scanner.nextLine()));
@@ -131,7 +144,8 @@ class Model{
             stats.put("totalTimeStarving", Long.parseLong(scanner.nextLine()));
             stats.put("totalTimeFull", Long.parseLong(scanner.nextLine()));
             stats.put("parent", scanner.nextLine());
-            stats.put("child", scanner.nextLine());
+            stats.put("children", scanner.nextLine());
+            */
         }
         catch(Exception e){
             System.out.println("Couldn't get the next line in reading the " + file + " file.");
@@ -155,7 +169,7 @@ class Model{
         return false;
     }
 
-    private boolean makePet(HashMap<String, Object> stats){
+    private boolean makePet(HashMap<String, String> stats){
         if (stats.get("type").equals("TestPet01")){
             pet = new TestPet01(stats);
             pet.setModel(this);

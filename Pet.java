@@ -31,53 +31,32 @@ abstract class Pet{
     private long step;
     private long lastTimeCheck;
     private String parent;
-    private String child;
+    private String[] children = new String[3];
     //private HashMap<String, Pet> children;
 
-    /*
-    Maybe make seperate overloads of the constructor that are made for loading
-    and creation?
-    */
-    public Pet(String name, long birthtime, float hunger){
-        random = new Random();
 
-        this.maxAge = 90;   // In hours
-        this.maxHunger = 100;
-
-        this.name = name;
-        this.birthtime = birthtime;
-        this.age = 0;
-
-        // Hunger
-        this.hunger = hunger;
-
-        this.lastTimeCheck = 0;
-
-        //setEggLayingTimes();
-    }
-
-    public Pet(HashMap<String, Object> stats){
+    public Pet(HashMap<String, String> stats){
         System.out.println("Made pet with stats");
         random = new Random();
 
         maxAge = 90;   // In milliseconds
         maxHunger = 100;
 
-        name = (String)stats.get("name");
+        name = stats.get("name");
         // Time
-        birthtime = (long)stats.get("birthtime");
-        deathtime = (long)stats.get("deathtime");
+        birthtime = Long.parseLong(stats.get("birthtime"));
+        deathtime = Long.parseLong(stats.get("deathtime"));
         age = 0;
-        lastTimeCheck = (long)stats.get("lastTimeCheck");
+        lastTimeCheck = Long.parseLong(stats.get("lastTimeCheck"));
         // Health
-        alive = (boolean)stats.get("alive");
+        alive = Boolean.parseBoolean(stats.get("alive"));
         starveThreshold = 0.2;
         fullThreshold = 0.8;
-        totalTimeStarving = (long)stats.get("totalTimeStarving");
-        totalTimeFull = (long)stats.get("totalTimeFull");
+        totalTimeStarving = Long.parseLong(stats.get("totalTimeStarving"));
+        totalTimeFull = Long.parseLong(stats.get("totalTimeFull"));
         // Hunger
-        hunger = (float)stats.get("hunger");
-        lastFed = (long)stats.get("lastFed");
+        hunger = Float.parseFloat(stats.get("hunger"));
+        lastFed = Long.parseLong(stats.get("lastFed"));
         millisSinceFed = System.currentTimeMillis() - lastFed;
         hungerCounter = System.currentTimeMillis() - lastTimeCheck;
 
@@ -89,8 +68,8 @@ abstract class Pet{
         */
         timesADay = 10000;
         step = 86400000 / timesADay;
-        parent = (String)stats.get("parent");
-        child = (String)stats.get("child");
+        parent = stats.get("parent");
+        children[0] = stats.get("children");
 
 
         //setEggLayingTimes(3);
@@ -133,7 +112,6 @@ abstract class Pet{
         age = lastTimeCheck - birthtime;
 
         while (simulatedTime <= currentTime){
-            // I think I'm done here now...
             // Hunger
             hunger -= 100.0 / (float)timesADay;
 
@@ -202,6 +180,9 @@ abstract class Pet{
         string += "\n" + lastFed;
         string += "\n" + totalTimeStarving;
         string += "\n" + totalTimeFull;
+        string += "\n" + parent;
+        string += "\n" + children;
+
 
         return string;
     }
@@ -329,6 +310,8 @@ abstract class Pet{
         * When you load a pet thet is dead, it recalculates the age as if it is
         alive. When you load a pet that dies during catchUp, age is calculated
         as it should.
+        * Due to the way I now do petSave-files I should check that the file has
+        valid values for all the variables.
     */
 
 }
