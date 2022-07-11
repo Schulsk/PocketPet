@@ -1,0 +1,12 @@
+type TestPet01
+name Gilgamesh
+alive false
+birthtime 1656474855464
+deathtime 1657388225580
+lastTimeCheck 1657467507643
+hunger 0.0
+lastFed 1657301835860
+totalTimeStarving 130835520
+totalTimeFull 120813120
+parent null
+children null

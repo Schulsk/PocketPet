@@ -5,11 +5,16 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 
 class Model{
+    private static int petCounter;
+
+    private File savefile = new File("savefile.txt");
     private Pet pet;
     private String petSaveFilename = "petSave.txt";
     private long time;
 
     public Model(){
+        petCounter = 0;
+
         pet = null;
         time = System.currentTimeMillis();
     }
@@ -19,6 +24,44 @@ class Model{
         if (pet != null){
             pet.update();
         }
+    }
+
+    // Saving and loaging
+    public boolean saveData(){
+        PrintWriter writer = null;
+        try{
+            writer = new PrintWriter(savefile);
+        }
+        catch (Exception e){
+            return false;
+        }
+        if (!savePet()){
+            return false;
+        }
+
+        writer.print(petSaveFilename);
+        writer.flush();
+        writer.close();
+
+        return true;
+    }
+
+    public boolean loadData(){
+        Scanner scanner = null;
+        try{
+            scanner = new Scanner(savefile);
+        }
+        catch (Exception e){
+            // todo
+            return false;
+        }
+        petSaveFilename = scanner.nextLine();
+
+        if (!loadPet()){
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -31,6 +74,11 @@ class Model{
         hunger
     */
     public boolean savePet(){
+        if (pet == null){
+            System.out.println("No pet to save");
+            return false;
+        }
+        petSaveFilename = petCounter + "_" + pet.getName() + ".txt";
         File file = new File(petSaveFilename);
         PrintWriter writer = null;
 
@@ -60,42 +108,52 @@ class Model{
             return false;
         }
 
-        HashMap<String, Object> stats = new HashMap<>();
-        String type = "";
-        String name = "";
-        long birthtime = 0;
-        long lastTimeCheck = 0;
-        float hunger = 0;
-        long lastFed = 0;
+        HashMap<String, String> stats = new HashMap<>();
 
         try{
-            // type = scanner.nextLine();
-            // name = scanner.nextLine();
-            // birthtime = Long.parseLong(scanner.nextLine());
-            // lastTimeCheck = Long.parseLong(scanner.nextLine());
-            // hunger = Float.parseFloat(scanner.nextLine());
-            // lastFed = Long.parseLong(scanner.nextLine());
+            // An attempt to make a loopable readable file with variable names and data
+            String line = "";
+            String[] parts;
+            while (scanner.hasNext()){
+                line = scanner.nextLine();
+                parts = line.split(" ");
+                stats.put(parts[0], parts[1]);
+
+                // This part is in case I want to have several children
+
+            }
+            /*
+            TODO:
+            I think I wanna make this saving system a little different
+            I might make it so that each line starts with the name of the
+            variable, then the value. Then I can just make the loading happen
+            with a simple loop.
+            Pros: changes will no longer have to be made here when I add more
+            variables
+            */
+
+            /*
             stats.put("type", scanner.nextLine());
             stats.put("name", scanner.nextLine());
+            stats.put("alive", Boolean.parseBoolean(scanner.nextLine()));
             stats.put("birthtime", Long.parseLong(scanner.nextLine()));
+            stats.put("deathtime", Long.parseLong(scanner.nextLine()));
             stats.put("lastTimeCheck", Long.parseLong(scanner.nextLine()));
-            stats.put("hunger",  Float.parseFloat(scanner.nextLine()));
-            stats.put("lastFed",  Long.parseLong(scanner.nextLine()));
+            stats.put("hunger", Float.parseFloat(scanner.nextLine()));
+            stats.put("lastFed", Long.parseLong(scanner.nextLine()));
+            stats.put("totalTimeStarving", Long.parseLong(scanner.nextLine()));
+            stats.put("totalTimeFull", Long.parseLong(scanner.nextLine()));
+            stats.put("parent", scanner.nextLine());
+            stats.put("children", scanner.nextLine());
+            */
         }
         catch(Exception e){
             System.out.println("Couldn't get the next line in reading the " + file + " file.");
             return false;
         }
-        // // Put the stats in the hashmap
-        // stats.put("type", type);
-        // stats.put("name", name);
-        // stats.put("birthtime", birthtime);
-        // stats.put("lastTimeCheck", lastTimeCheck);
-        // stats.put("hunger", hunger);
-        // stats.put("lastFed", lastFed);
 
         if (! makePet(stats)){
-            System.out.println("Couldn't make pet of type " + type);
+            System.out.println("Couldn't make pet of type " + stats.get("type"));
             return false;
         }
 
@@ -111,7 +169,7 @@ class Model{
         return false;
     }
 
-    private boolean makePet(HashMap<String, Object> stats){
+    private boolean makePet(HashMap<String, String> stats){
         if (stats.get("type").equals("TestPet01")){
             pet = new TestPet01(stats);
             pet.setModel(this);

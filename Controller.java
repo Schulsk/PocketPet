@@ -39,7 +39,7 @@ class Controller{
     public boolean saveState(){
         try{
             lock.lock();
-            if (! model.savePet()){
+            if (! model.saveData()){
                 return false;
             }
 
@@ -53,7 +53,7 @@ class Controller{
     public boolean loadState(){
         try{
             lock.lock();
-            if (! model.loadPet()){
+            if (! model.loadData()){
                 return false;
             }
 

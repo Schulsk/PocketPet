@@ -9,8 +9,9 @@ class TestPet01 extends Pet{
         super(name, birthtime, hunger);
         setType("TestPet01");
     }
-    public TestPet01(HashMap<String, Object> stats){
+    public TestPet01(HashMap<String, String> stats){
         super(stats);
         setType("TestPet01");
+        maxAge = 500;
     }
 }
