@@ -1,6 +1,8 @@
 
 import java.util.Random;
 import java.util.HashMap;
+import java.io.PrintWriter;
+import java.io.File;
 
 
 // abstract
@@ -8,11 +10,10 @@ abstract class Pet{
     private Model model = null;
     private Random random;
 
-    private String name;
+    protected String name;
     private long babyTime, childTime, adultTime;
     private String type = "";
     private String stage = "";
-    private double[] eggLayingTimes;    // Percentages of the adult stage's max
 
     // Health stuff
     private boolean alive, starving, full;
@@ -24,7 +25,16 @@ abstract class Pet{
 
     // Hunger
     private float hunger, maxHunger;
-    private long hungerCounter, millisSinceFed, lastFed;
+    private long hungerCounter, lastFed;
+
+    // Positions
+    private PlayPen playPen;
+    private int posX;
+    private int posY;
+
+    // Egg stuff
+    private String egg;
+    private double[] eggLayingTimes;    // Percentages of the adult stage's max
 
     // Other
     private long timesADay;
@@ -33,9 +43,32 @@ abstract class Pet{
     private String parent;
     private String[] children = new String[3];
     //private HashMap<String, Pet> children;
+    private int id;
+
+    private static int petCount = 0;        // I think maybe the model should handle this
 
     // Creating a new pet
-    public Pet(){
+    public Pet(long currentTime, String parentName){
+        System.out.println("Made new pet");
+        random = new Random();
+
+        setValuesNotInFile();
+
+        // Setting all the values that you'd normally store in a savefile
+        name = "unnamed";
+        birthtime = currentTime;
+        deathtime = 0;
+        lastTimeCheck = currentTime;
+        alive = true;
+        totalTimeStarving = 0;
+        totalTimeFull = 0;
+        hunger = maxHunger;     // This must be dealt with, maxHunger can be set in subclasses after this
+        lastFed = currentTime;
+        hungerCounter = currentTime - lastTimeCheck;
+        parent = parentName;
+        egg = "null";
+        eggLayingTimes[0] = random.nextDouble();
+        id = petCount++;
 
     }
     // Loading a pet from file
@@ -46,35 +79,28 @@ abstract class Pet{
         System.out.println("Made pet with stats");
         random = new Random();
 
-        maxAge = 90;   // In milliseconds
-        maxHunger = 100;
+        setValuesNotInFile();
 
         name = stats.get("name");
+        id = Integer.parseInt(stats.get("id"));
         // Time
         birthtime = Long.parseLong(stats.get("birthtime"));
         deathtime = Long.parseLong(stats.get("deathtime"));
-        age = 0;
         lastTimeCheck = Long.parseLong(stats.get("lastTimeCheck"));
         // Health
         alive = Boolean.parseBoolean(stats.get("alive"));
-        starveThreshold = 0.2;
-        fullThreshold = 0.8;
         totalTimeStarving = Long.parseLong(stats.get("totalTimeStarving"));
         totalTimeFull = Long.parseLong(stats.get("totalTimeFull"));
         // Hunger
         hunger = Float.parseFloat(stats.get("hunger"));
         lastFed = Long.parseLong(stats.get("lastFed"));
-        millisSinceFed = System.currentTimeMillis() - lastFed;
         hungerCounter = System.currentTimeMillis() - lastTimeCheck;
 
+        // Egg stuff
+        egg = stats.get("egg");
+        eggLayingTimes[0] = Double.parseDouble(stats.get("eggLayingTimes"));
+
         // Other
-        /*
-        Todo:
-        I wanna do the math and display how I increase the hunger more
-        clearly later
-        */
-        timesADay = 10000;
-        step = 86400000 / timesADay;
         parent = stats.get("parent");
         children[0] = stats.get("children");
 
@@ -86,8 +112,8 @@ abstract class Pet{
     }
 
     // Update
-    public void update(){
-        long currentTime = model.getTime();
+    public void update(Long currentTime){
+        //long currentTime = model.getTime();
         if (alive){
             calculateAge();
             // Todo: Check if too old
@@ -108,12 +134,7 @@ abstract class Pet{
         // predetermined in a constant. That way, I could just choose how many
         // times I shoud call the update method in  the catchUp  method and it
         // should all work just fine.
-        /*
-        Todo:
-        Here I could do everything that needs to be done to catch up with the
-        time that has passed while you've been away
-        stuff like counting up hunger and all that shit.
-        */
+        
         long currentTime = System.currentTimeMillis();
         long simulatedTime = lastTimeCheck;
         age = lastTimeCheck - birthtime;
@@ -155,7 +176,7 @@ abstract class Pet{
     public String toString(){
         String string = "";
         string += "Type: " + type;
-        string += "\nName: " + name;
+        string += "\nName: " + name + " Id: " + id;
         string += "\nAlive: " + alive;
         if (!alive){
             string += "\nDeathtime: " + deathtime;
@@ -174,24 +195,57 @@ abstract class Pet{
         return string;
     }
 
+    // Saving and loading
+
+    public String getSavefileName(){
+        String string = id + "_" + name + ".txt";
+        return string;
+    }
+
     public String getSaveFormat(){
         // Any changes made here must also be made in Model.java in the loadPet method
         String string = "";
-        string += type;
-        string += "\n" + name;
-        string += "\n" + alive;
-        string += "\n" + birthtime;
-        string += "\n" + deathtime;
-        string += "\n" + lastTimeCheck;
-        string += "\n" + hunger;
-        string += "\n" + lastFed;
-        string += "\n" + totalTimeStarving;
-        string += "\n" + totalTimeFull;
-        string += "\n" + parent;
-        string += "\n" + children;
+        string += "type " + type;
+        string += "\n" + "name " +  name;
+        string += "\n" + "id " +  id;
+        string += "\n" + "alive " + alive;
+        string += "\n" + "birthtime " + birthtime;
+        string += "\n" + "deathtime " + deathtime;
+        string += "\n" + "lastTimeCheck " + lastTimeCheck;
+        string += "\n" + "hunger " + hunger;
+        string += "\n" + "lastFed " + lastFed;
+        string += "\n" + "totalTimeStarving " + totalTimeStarving;
+        string += "\n" + "totalTimeFull " + totalTimeFull;
+        string += "\n" + "parent " + parent;
+        string += "\n" + "children " + children[0];
+        string += "\n" + "egg " + egg;
+        string += "\n" + "eggLayingTimes " + eggLayingTimes[0];
 
+        /*
+        string += "\n" + "children ";
+        int i = 0;
+        for (String child : children){
+            string += children[i++] + ",";
+        }
+        */
 
         return string;
+    }
+
+    public boolean save(){
+        File file = new File(getSavefileName());
+        PrintWriter writer = null;
+        try{
+            writer = new PrintWriter(file);
+        }
+        catch(Exception e){
+            return false;
+        }
+
+        writer.print(getSaveFormat());
+        writer.close();
+
+        return true;
     }
 
 
@@ -292,6 +346,32 @@ abstract class Pet{
     }
 
 
+    // Egg stuff
+
+    // Public for testing purposes
+    public void layEgg(){
+        // gotta figure out a way to choose types here
+        Egg temp = new TestEgg01(lastTimeCheck, getSavefileName());
+        temp.save();
+        egg = temp.getSavefileName();
+    }
+
+    public boolean hasEgg(){
+        if (egg.equals("null")){
+            return false;
+        }
+        return true;
+    }
+
+    public String removeEgg(){
+        String temp = egg;
+        egg = "null";
+        System.out.println("in removeEgg()");
+        System.out.println("egg: " + egg + " temp: " + temp);
+        return temp;
+    }
+
+
     // Get and set
     private void setEggLayingTimes(int eggNumber){
         eggLayingTimes = new double[eggNumber];
@@ -307,6 +387,38 @@ abstract class Pet{
 
     public String getName(){
         return name;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    private void setValuesNotInFile(){
+        maxAge = 90;
+        maxHunger = 100;
+        age = 0;
+        starveThreshold = 0.2;
+        fullThreshold = 0.8;
+        /*
+        Todo:
+        I wanna do the math and display how I increase the hunger more
+        clearly later
+        */
+        timesADay = 10000;
+        step = 86400000 / timesADay;
+        eggLayingTimes = new double[3];
+    }
+
+
+
+    // Other
+
+    public static void setPetCount(int newPetCount){
+        petCount = newPetCount;
+    }
+
+    public static int getPetCount(){
+        return petCount;
     }
 
 

@@ -20,6 +20,8 @@ class Main{
             System.out.println("S - Save");
             System.out.println("P - Print");
             System.out.println("T - Time");
+            System.out.println("E - Lay egg");
+            System.out.println("I - Inspect inventory");
             System.out.println("Q - Quit");
             System.out.println();
 
@@ -49,6 +51,13 @@ class Main{
                 inp = "q";
                 controller.quit();
                 System.out.println("Game quit");
+            }
+            else if (inp.equals("e")){
+                controller.getPet().layEgg();
+                System.out.println(controller.getPet().getName() + " laid an egg!");
+            }
+            else if (inp.equals("i")){
+                System.out.println(controller.getInventory());
             }
             else if (inp.equals("t")){
                 System.out.println("Time: " + controller.getTime());

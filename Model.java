@@ -5,15 +5,32 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 
 class Model{
-    private static int petCounter;
+    // petCounter used in the save file system
+    private int petCounter;
 
     private File savefile = new File("savefile.txt");
     private Pet pet;
     private String petSaveFilename = "petSave.txt";
+    private String inventorySaveFilename = "inventorySavefile.txt";
     private long time;
 
+    // Inventory
+    private Inventory inventory;
+
     public Model(){
-        petCounter = 0;
+        Scanner scanner = null;
+        try{
+            scanner = new Scanner(savefile);
+        }
+        catch(Exception e){
+            System.out.println("The savefile could not be found");
+            System.exit(1);
+        }
+
+        Pet.setPetCount(Integer.parseInt(scanner.nextLine()));
+        petSaveFilename = scanner.nextLine();
+
+        scanner.close();
 
         pet = null;
         time = System.currentTimeMillis();
@@ -22,40 +39,60 @@ class Model{
     public void update(){
         time = System.currentTimeMillis();
         if (pet != null){
-            pet.update();
+            pet.update(time);
+            if (pet.hasEgg()){
+                inventory.put(pet.removeEgg());
+            }
         }
     }
 
-    // Saving and loaging
+    // Saving and loading
     public boolean saveData(){
+        if (!inventory.save()){
+            return false;
+        }
+        // PrintWriter writer = null;
+        // try{
+        //     writer = new PrintWriter(savefile);
+        // }
+        // catch (Exception e){
+        //     return false;
+        // }
+        if (!savePet(pet)){
+            return false;
+        }
+
         PrintWriter writer = null;
         try{
             writer = new PrintWriter(savefile);
         }
-        catch (Exception e){
+        catch(Exception e){
+            System.out.println(e);
             return false;
         }
-        if (!savePet()){
-            return false;
+        writer.println(Pet.getPetCount());
+        if (pet != null){
+            writer.println(pet.getSavefileName());
+        }
+        else{
+            writer.println("null");
         }
 
-        writer.print(petSaveFilename);
-        writer.flush();
         writer.close();
+        System.out.println("Do we get here?");
+
+        // writer.println(petCounter);
+        // writer.println(petSaveFilename);
+        // writer.close();
 
         return true;
     }
 
     public boolean loadData(){
-        Scanner scanner = null;
-        try{
-            scanner = new Scanner(savefile);
-        }
-        catch (Exception e){
-            // todo
+        inventory = Inventory.load(inventorySaveFilename);
+        if (inventory == null){
             return false;
         }
-        petSaveFilename = scanner.nextLine();
 
         if (!loadPet()){
             return false;
@@ -66,13 +103,6 @@ class Model{
 
 
     // Pet saving and loading
-    /*
-        The petSave.txt file should follow the following structure:
-        type
-        name
-        age
-        hunger
-    */
     public boolean savePet(){
         if (pet == null){
             System.out.println("No pet to save");
@@ -92,8 +122,19 @@ class Model{
 
         writer.print(pet.getSaveFormat());
         writer.flush();
+        writer.close();
 
         return true;
+    }
+    // Overload to save any pet
+    // working here ------------------------------------------------------------------------------
+    //trying to get inventory and eggs to work properly
+    public boolean savePet(Pet pet){
+        if (pet == null){
+            System.out.println("No pet to save");
+            return false;
+        }
+        return pet.save();
     }
 
     public boolean loadPet(){
@@ -120,37 +161,17 @@ class Model{
                 stats.put(parts[0], parts[1]);
 
                 // This part is in case I want to have several children
+                //Todo
 
             }
-            /*
-            TODO:
-            I think I wanna make this saving system a little different
-            I might make it so that each line starts with the name of the
-            variable, then the value. Then I can just make the loading happen
-            with a simple loop.
-            Pros: changes will no longer have to be made here when I add more
-            variables
-            */
-
-            /*
-            stats.put("type", scanner.nextLine());
-            stats.put("name", scanner.nextLine());
-            stats.put("alive", Boolean.parseBoolean(scanner.nextLine()));
-            stats.put("birthtime", Long.parseLong(scanner.nextLine()));
-            stats.put("deathtime", Long.parseLong(scanner.nextLine()));
-            stats.put("lastTimeCheck", Long.parseLong(scanner.nextLine()));
-            stats.put("hunger", Float.parseFloat(scanner.nextLine()));
-            stats.put("lastFed", Long.parseLong(scanner.nextLine()));
-            stats.put("totalTimeStarving", Long.parseLong(scanner.nextLine()));
-            stats.put("totalTimeFull", Long.parseLong(scanner.nextLine()));
-            stats.put("parent", scanner.nextLine());
-            stats.put("children", scanner.nextLine());
-            */
         }
         catch(Exception e){
             System.out.println("Couldn't get the next line in reading the " + file + " file.");
+            scanner.close();
             return false;
         }
+
+        scanner.close();
 
         if (! makePet(stats)){
             System.out.println("Couldn't make pet of type " + stats.get("type"));
@@ -160,14 +181,6 @@ class Model{
         return true;
     }
 
-    private boolean makePet(String type, String name, long birthtime, float hunger){
-        if (type.equals("TestPet01")){
-            pet = new TestPet01(name, birthtime, hunger);
-            pet.setModel(this);
-            return true;
-        }
-        return false;
-    }
 
     private boolean makePet(HashMap<String, String> stats){
         if (stats.get("type").equals("TestPet01")){
@@ -177,6 +190,58 @@ class Model{
         }
         return false;
     }
+
+
+    // Inventory
+    // Handling
+    public boolean putIntoInventory(Egg egg){
+        if (inventory.hasRoom()){
+
+            return true;
+        }
+        return false;
+    }
+
+    public Egg takeFromInventory(String name){
+
+        return null;
+    }
+
+    public void inspect(){
+        // Loads the eggs (and pets?) in memory from files and lets you see their data
+
+    }
+
+    // saving and loading
+    private boolean saveInventory(){
+        // Trying to figure out how to do this.
+
+        return false;
+    }
+
+    private boolean loadInventory(){
+
+        return false;
+    }
+
+    public Inventory getInventory(){
+        return inventory;
+    }
+
+
+    // Pet handling
+    public void renamePet(String newName){
+        // Gotta delete the old pet-savefile and make a new with the new name after this is done
+        File oldPetSavefile = new File(pet.getSavefileName());
+
+        pet.setName(newName);
+
+        File newPetSavefile = new File(pet.getSavefileName());
+        savePet(pet);
+        oldPetSavefile.delete();
+    }
+
+
 
 
     // Get and set methods

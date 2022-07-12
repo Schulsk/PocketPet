@@ -1,0 +1,15 @@
+type TestEgg01
+name unnamed
+id 1
+alive true
+birthtime 1657629783471
+deathtime 0
+lastTimeCheck 1657629783471
+hunger 100.0
+lastFed 1657629783471
+totalTimeStarving 0
+totalTimeFull 0
+parent 4444_Gilgamesh.txt
+children null
+egg null
+eggLayingTimes 0.43257648292730766

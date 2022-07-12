@@ -84,6 +84,10 @@ class Controller{
         return model.getTime();
     }
 
+    public Inventory getInventory(){
+        return model.getInventory();
+    }
+
     public boolean quit(){
         setUpdating(false);
         try{
