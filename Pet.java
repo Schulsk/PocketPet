@@ -25,7 +25,7 @@ abstract class Pet{
 
     // Hunger
     private long hunger, maxHunger;
-    private long hungerCounter, lastFed;
+    private long lastFed;
 
     // Positions
     private PlayPen playPen;
@@ -64,7 +64,6 @@ abstract class Pet{
         totalTimeFull = 0;
         hunger = maxHunger;     // This must be dealt with, maxHunger can be set in subclasses after this
         lastFed = currentTime;
-        hungerCounter = currentTime - lastTimeCheck;
         parent = parentName;
         egg = "null";
         eggLayingTimes[0] = random.nextDouble();
@@ -72,9 +71,6 @@ abstract class Pet{
 
     }
     // Loading a pet from file
-    /*
-    Maybe I should have had the Pet class deal with the reading of the file as well?
-    */
     public Pet(HashMap<String, String> stats){
         System.out.println("Made pet with stats");
         random = new Random();
@@ -94,7 +90,6 @@ abstract class Pet{
         // Hunger
         hunger = Long.parseLong(stats.get("hunger"));
         lastFed = Long.parseLong(stats.get("lastFed"));
-        hungerCounter = System.currentTimeMillis() - lastTimeCheck;
 
         // Egg stuff
         egg = stats.get("egg");
@@ -127,15 +122,6 @@ abstract class Pet{
     }
 
     public void catchUp(){
-        // I am reconsidering the way I have done this whole catchUp method now.
-        // I think I should have rather made the update and everything in it
-        // not depend on the current time from the system call, but rather use
-        // either a time interval that is passed as an argument, or that is
-        // predetermined in a constant. That way, I could just choose how many
-        // times I shoud call the update method in  the catchUp  method and it
-        // should all work just fine.
-
-        //Testing uupdate variant
         long currentTime = System.currentTimeMillis();
         long simulatedTime = lastTimeCheck;
         age = lastTimeCheck - birthtime;
@@ -144,38 +130,6 @@ abstract class Pet{
             update(simulatedTime);
             simulatedTime += step;
         }
-
-        // long currentTime = System.currentTimeMillis();
-        // long simulatedTime = lastTimeCheck;
-        // age = lastTimeCheck - birthtime;
-        //
-        // while (simulatedTime <= currentTime){
-        //     // Hunger
-        //     hunger -= 100.0 / (float)timesADay;
-        //
-        //
-        //     // Check for death
-        //     if (hunger <= 0){
-        //         die();
-        //         hunger = 0;
-        //     }
-        //
-        //     // Aging
-        //     if (alive){
-        //         age += step;
-        //     }
-        //
-        //     // Check for death by old age
-        //     /*
-        //     Todo
-        //     */
-        //
-        //     // Finally
-        //     if (alive){
-        //         checkFoodStatus();
-        //     }
-        //     simulatedTime += step;
-        // }
     }
 
     public void setModel(Model model){
@@ -279,14 +233,6 @@ abstract class Pet{
         }
     }
 
-    // Old
-    private void calculateAge(){
-        if (model == null){
-            return;
-        }
-        age = model.getTime() - birthtime;
-    }
-    // New
     private void calculateAge(long currentTime){
         age = currentTime - birthtime;
     }
@@ -310,18 +256,9 @@ abstract class Pet{
 
     // Hunger stuff
     private void checkHunger(long currentTime){
-        hungerCounter += currentTime - lastTimeCheck;
         long digested = currentTime - lastTimeCheck;
 
-        /*
-            Here I can do a calculation in stead of a while loop to save some
-            time if you've been away for a long time
-            Might have to keep it like this to figure out how long they have
-            been starving or full
-        */
-
         hunger -= digested;
-        hungerCounter -= step;
 
         checkFoodStatus();
 
@@ -330,26 +267,14 @@ abstract class Pet{
             die();
             hunger = 0;
         }
-
-
-        // This is like this because the update call might be of different
-        // intervals, and I'm too drunk too think straight right now.
-        // while (hungerCounter >= step){
-        //     hunger -= digested;
-        //     hungerCounter -= step;
-        //
-        //     checkFoodStatus();
-        //
-        //     // Check for death
-        //     if (hunger <= 0){
-        //         die();
-        //         hunger = 0;
-        //     }
-        // }
-
     }
 
     private void checkFoodStatus(){
+        /*
+        Todo:
+            I should probably get rid of the step here and just pass down
+            currentTime like I did in checkHunger
+        */
         if (hunger < maxHunger * starveThreshold){
             totalTimeStarving += step;
         }
