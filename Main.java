@@ -28,7 +28,7 @@ class Main{
             inp = scanner.nextLine().toLowerCase();
 
             if (inp.equals("f")){
-                controller.getPet().eat(new Food(25.0));
+                controller.getPet().eat(new Food(3600000));
                 System.out.println("Pet has been fed");
             }
             else if (inp.equals("s")){

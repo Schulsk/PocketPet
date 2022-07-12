@@ -2,23 +2,23 @@
 
 class Food implements Consumable{
 
-    private double nutrition;
+    private long nutrition;
     private boolean eaten;
 
-    public Food(double nutrition){
+    public Food(long nutrition){
         this.nutrition = nutrition;
         eaten = false;
     }
 
     @Override
-    public double consume(){
+    public long consume(){
         if (!eaten){
-            double temp = nutrition;
+            long temp = nutrition;
             nutrition = 0;
             eaten = true;
             return temp;
         }
-        return 0.0;
+        return 0;
     }
 
 }

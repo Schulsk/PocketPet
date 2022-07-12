@@ -24,7 +24,7 @@ abstract class Pet{
     private double starveThreshold, fullThreshold;       // Percent %
 
     // Hunger
-    private float hunger, maxHunger;
+    private long hunger, maxHunger;
     private long hungerCounter, lastFed;
 
     // Positions
@@ -92,7 +92,7 @@ abstract class Pet{
         totalTimeStarving = Long.parseLong(stats.get("totalTimeStarving"));
         totalTimeFull = Long.parseLong(stats.get("totalTimeFull"));
         // Hunger
-        hunger = Float.parseFloat(stats.get("hunger"));
+        hunger = Long.parseLong(stats.get("hunger"));
         lastFed = Long.parseLong(stats.get("lastFed"));
         hungerCounter = System.currentTimeMillis() - lastTimeCheck;
 
@@ -115,11 +115,11 @@ abstract class Pet{
     public void update(Long currentTime){
         //long currentTime = model.getTime();
         if (alive){
-            calculateAge();
+            calculateAge(currentTime);
             // Todo: Check if too old
 
             // Hunger
-            checkHunger();
+            checkHunger(currentTime);
         }
 
         // Last thing
@@ -134,38 +134,48 @@ abstract class Pet{
         // predetermined in a constant. That way, I could just choose how many
         // times I shoud call the update method in  the catchUp  method and it
         // should all work just fine.
-        
+
+        //Testing uupdate variant
         long currentTime = System.currentTimeMillis();
         long simulatedTime = lastTimeCheck;
         age = lastTimeCheck - birthtime;
 
         while (simulatedTime <= currentTime){
-            // Hunger
-            hunger -= 100.0 / (float)timesADay;
-
-
-            // Check for death
-            if (hunger <= 0){
-                die();
-                hunger = 0;
-            }
-
-            // Aging
-            if (alive){
-                age += step;
-            }
-
-            // Check for death by old age
-            /*
-            Todo
-            */
-
-            // Finally
-            if (alive){
-                checkFoodStatus();
-            }
+            update(simulatedTime);
             simulatedTime += step;
         }
+
+        // long currentTime = System.currentTimeMillis();
+        // long simulatedTime = lastTimeCheck;
+        // age = lastTimeCheck - birthtime;
+        //
+        // while (simulatedTime <= currentTime){
+        //     // Hunger
+        //     hunger -= 100.0 / (float)timesADay;
+        //
+        //
+        //     // Check for death
+        //     if (hunger <= 0){
+        //         die();
+        //         hunger = 0;
+        //     }
+        //
+        //     // Aging
+        //     if (alive){
+        //         age += step;
+        //     }
+        //
+        //     // Check for death by old age
+        //     /*
+        //     Todo
+        //     */
+        //
+        //     // Finally
+        //     if (alive){
+        //         checkFoodStatus();
+        //     }
+        //     simulatedTime += step;
+        // }
     }
 
     public void setModel(Model model){
@@ -203,7 +213,6 @@ abstract class Pet{
     }
 
     public String getSaveFormat(){
-        // Any changes made here must also be made in Model.java in the loadPet method
         String string = "";
         string += "type " + type;
         string += "\n" + "name " +  name;
@@ -248,6 +257,14 @@ abstract class Pet{
         return true;
     }
 
+    public static Pet load(){
+        /*
+        Todo
+        */
+
+        return null;
+    }
+
 
     protected void setType(String type){
         this.type = type;
@@ -262,11 +279,16 @@ abstract class Pet{
         }
     }
 
+    // Old
     private void calculateAge(){
         if (model == null){
             return;
         }
         age = model.getTime() - birthtime;
+    }
+    // New
+    private void calculateAge(long currentTime){
+        age = currentTime - birthtime;
     }
 
     public int getAgeInSeconds(){
@@ -287,8 +309,9 @@ abstract class Pet{
 
 
     // Hunger stuff
-    private void checkHunger(){
-        hungerCounter += model.getTime() - lastTimeCheck;
+    private void checkHunger(long currentTime){
+        hungerCounter += currentTime - lastTimeCheck;
+        long digested = currentTime - lastTimeCheck;
 
         /*
             Here I can do a calculation in stead of a while loop to save some
@@ -297,20 +320,32 @@ abstract class Pet{
             been starving or full
         */
 
+        hunger -= digested;
+        hungerCounter -= step;
+
+        checkFoodStatus();
+
+        // Check for death
+        if (hunger <= 0){
+            die();
+            hunger = 0;
+        }
+
+
         // This is like this because the update call might be of different
         // intervals, and I'm too drunk too think straight right now.
-        while (hungerCounter >= step){
-            hunger -= 100.0 / (float)timesADay;
-            hungerCounter -= step;
-
-            checkFoodStatus();
-
-            // Check for death
-            if (hunger <= 0){
-                die();
-                hunger = 0;
-            }
-        }
+        // while (hungerCounter >= step){
+        //     hunger -= digested;
+        //     hungerCounter -= step;
+        //
+        //     checkFoodStatus();
+        //
+        //     // Check for death
+        //     if (hunger <= 0){
+        //         die();
+        //         hunger = 0;
+        //     }
+        // }
 
     }
 
@@ -331,7 +366,7 @@ abstract class Pet{
         if (hunger > maxHunger){
             hunger = maxHunger;
         }
-        lastFed = model.getTime();
+        lastFed = model.getTime();      // maybe change this to lastTimeCheck
     }
 
 
@@ -395,7 +430,7 @@ abstract class Pet{
 
     private void setValuesNotInFile(){
         maxAge = 90;
-        maxHunger = 100;
+        maxHunger = 80000000;
         age = 0;
         starveThreshold = 0.2;
         fullThreshold = 0.8;
