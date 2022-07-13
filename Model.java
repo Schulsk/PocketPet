@@ -8,10 +8,10 @@ class Model{
     // petCounter used in the save file system
     private int petCounter;
 
-    private File savefile = new File("savefile.txt");
+    private File savefile = new File("savefiles/savefile.txt");
     private Pet pet;
     private String petSaveFilename = "petSave.txt";
-    private String inventorySaveFilename = "inventorySavefile.txt";
+    //private String inventorySaveFilename = "inventorySavefile.txt";
     private long time;
 
     // Inventory
@@ -79,17 +79,12 @@ class Model{
         }
 
         writer.close();
-        System.out.println("Do we get here?");
-
-        // writer.println(petCounter);
-        // writer.println(petSaveFilename);
-        // writer.close();
 
         return true;
     }
 
     public boolean loadData(){
-        inventory = Inventory.load(inventorySaveFilename);
+        inventory = Inventory.load();
         if (inventory == null){
             return false;
         }
@@ -138,7 +133,7 @@ class Model{
     }
 
     public boolean loadPet(){
-        File file = new File(petSaveFilename);
+        File file = new File("savefiles/pets/" + petSaveFilename);
         Scanner scanner = null;
 
         try{

@@ -116,6 +116,9 @@ abstract class Pet{
             // Hunger
             checkHunger(currentTime);
         }
+        if (alive){
+            checkForEggLaying();
+        }
 
         // Last thing
         lastTimeCheck = currentTime;
@@ -150,7 +153,7 @@ abstract class Pet{
         string += "\nLast Timecheck: " + lastTimeCheck;
         string += "\nLastFed: " + lastFed;
         // string += "\nTime since last fed: " + TimeConverter.toString(hungerCounter) + " : " + hungerCounter;
-        string += "\nHunger: " + hunger;
+        string += "\nHunger: " + hunger + " Time left: " + TimeConverter.toString(hunger);
         string += "\nTotal time starving: " + TimeConverter.toString(totalTimeStarving) + " : " + totalTimeStarving;
         string += "\nTotal time full: " + TimeConverter.toString(totalTimeFull) + " : " + totalTimeFull;
         string += "\nAge: " + TimeConverter.toString(age);
@@ -195,8 +198,13 @@ abstract class Pet{
         return string;
     }
 
+    /*
+    Maybe I'll make static saver and loader objects that can save and load all
+    the different items that I need to handle?
+
+    */
     public boolean save(){
-        File file = new File(getSavefileName());
+        File file = new File("savefiles/pets/" + getSavefileName());
         PrintWriter writer = null;
         try{
             writer = new PrintWriter(file);
@@ -226,12 +234,6 @@ abstract class Pet{
 
 
     // Age stuff
-    private void increaseAge(long amount){
-        age += amount;
-        if (age > maxAge){
-            System.out.println(name + " is old and dead");
-        }
-    }
 
     private void calculateAge(long currentTime){
         age = currentTime - birthtime;
@@ -307,6 +309,18 @@ abstract class Pet{
 
 
     // Egg stuff
+    public boolean checkForEggLaying(){
+        for (int i = 0; i < eggLayingTimes.length; i++){
+            if (eggLayingTimes[i] != 0){
+                if (age >= maxAge * eggLayingTimes[i]){
+                    layEgg();
+                    eggLayingTimes[i] = 0;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     // Public for testing purposes
     public void layEgg(){
@@ -314,6 +328,7 @@ abstract class Pet{
         Egg temp = new TestEgg01(lastTimeCheck, getSavefileName());
         temp.save();
         egg = temp.getSavefileName();
+        children[0] = egg;
     }
 
     public boolean hasEgg(){
@@ -365,7 +380,8 @@ abstract class Pet{
         clearly later
         */
         timesADay = 10000;
-        step = 86400000 / timesADay;
+        //step = 86400000 / timesADay;
+        step = 1000;
         eggLayingTimes = new double[3];
     }
 

@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 class Inventory{
     private Slot<String>[] eggSlots;
+    static final String savefilePath = "savefiles/inventorySavefile.txt";
 
 
     class Slot<T>{
@@ -95,7 +96,7 @@ class Inventory{
 
     // Saving and loading
     public boolean save(){
-        File file = new File("inventorySavefile.txt");
+        File file = new File(savefilePath);
         PrintWriter writer = null;
 
         try{
@@ -114,8 +115,8 @@ class Inventory{
         return true;
     }
 
-    public static Inventory load(String filename){
-        File file = new File(filename);
+    public static Inventory load(){
+        File file = new File(savefilePath);
         Scanner scanner = null;
         try{
             scanner = new Scanner(file);
