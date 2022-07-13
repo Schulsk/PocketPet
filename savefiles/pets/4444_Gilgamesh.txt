@@ -4,12 +4,12 @@ id 4444
 alive true
 birthtime 1656474855464
 deathtime 1657468231980
-lastTimeCheck 1657691825998
-hunger 21771994
+lastTimeCheck 1657696504230
+hunger 17093762
 lastFed 1657633597992
 totalTimeStarving 147242880
 totalTimeFull 153334080
 parent null
-children null
+children 0_unnamed.txt
 egg null
-eggLayingTimes 0.5
+eggLayingTimes 0.0

@@ -3,11 +3,13 @@ import java.util.Random;
 import java.util.HashMap;
 import java.io.PrintWriter;
 import java.io.File;
+import java.util.Scanner;
 
 
 // abstract
 abstract class Pet{
-    private Model model = null;
+    final static String savefileDirectory = "savefiles/pets/";
+    private Model model = null;     // Old
     private Random random;
 
     protected String name;
@@ -147,7 +149,7 @@ abstract class Pet{
         string += "\nAlive: " + alive;
         if (!alive){
             string += "\nDeathtime: " + deathtime;
-            string += "\nTotal time dead: " + TimeConverter.toString(model.getTime() - deathtime);
+            string += "\nTotal time dead: " + TimeConverter.toString(lastTimeCheck - deathtime);
         }
         string += "\nBirthtime: " + birthtime;
         string += "\nLast Timecheck: " + lastTimeCheck;
@@ -204,7 +206,7 @@ abstract class Pet{
 
     */
     public boolean save(){
-        File file = new File("savefiles/pets/" + getSavefileName());
+        File file = new File(savefileDirectory + getSavefileName());
         PrintWriter writer = null;
         try{
             writer = new PrintWriter(file);
@@ -219,12 +221,47 @@ abstract class Pet{
         return true;
     }
 
-    public static Pet load(){
+    public static Pet load(String savefileName){
         /*
         Todo
         */
 
-        return null;
+        Pet loaded = null;
+        File file = new File(savefileDirectory + savefileName);
+        Scanner scanner = null;
+        try{
+            scanner = new Scanner(file);
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return null;
+        }
+
+        HashMap<String, String> stats = new HashMap<>();
+        try{
+            // Read file and put into stats
+            while (scanner.hasNext()){
+                String[] line = scanner.nextLine().split(" ");
+                stats.put(line[0], line[1]);
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+            System.out.println("Error when reading file and splitting lines");
+            scanner.close();
+            return null;
+        }
+        scanner.close();
+
+        // Make the pet
+        if (stats.get("type").equals("TestPet01")){
+            loaded = new TestPet01(stats);
+        }
+        else if (stats.get("type").equals("TestEgg01")){
+            loaded = new TestEgg01(stats);
+        }
+
+        return loaded;
     }
 
 
@@ -293,7 +330,7 @@ abstract class Pet{
         if (hunger > maxHunger){
             hunger = maxHunger;
         }
-        lastFed = model.getTime();      // maybe change this to lastTimeCheck
+        lastFed = lastTimeCheck;      // maybe change this to use current time
     }
 
 

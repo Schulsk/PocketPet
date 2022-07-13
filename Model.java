@@ -89,7 +89,9 @@ class Model{
             return false;
         }
 
-        if (!loadPet()){
+        pet = Pet.load(petSaveFilename);
+        if (pet == null){
+            System.out.println("Couldn't load pet");
             return false;
         }
 
@@ -122,8 +124,6 @@ class Model{
         return true;
     }
     // Overload to save any pet
-    // working here ------------------------------------------------------------------------------
-    //trying to get inventory and eggs to work properly
     public boolean savePet(Pet pet){
         if (pet == null){
             System.out.println("No pet to save");
