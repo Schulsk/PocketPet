@@ -51,13 +51,7 @@ class Model{
         if (!inventory.save()){
             return false;
         }
-        // PrintWriter writer = null;
-        // try{
-        //     writer = new PrintWriter(savefile);
-        // }
-        // catch (Exception e){
-        //     return false;
-        // }
+
         if (!savePet(pet)){
             return false;
         }
@@ -100,90 +94,12 @@ class Model{
 
 
     // Pet saving and loading
-    public boolean savePet(){
-        if (pet == null){
-            System.out.println("No pet to save");
-            return false;
-        }
-        petSaveFilename = petCounter + "_" + pet.getName() + ".txt";
-        File file = new File(petSaveFilename);
-        PrintWriter writer = null;
-
-        try{
-            writer = new PrintWriter(file);
-        }
-        catch(Exception e){
-            // FileNotFoundException
-            return false;
-        }
-
-        writer.print(pet.getSaveFormat());
-        writer.flush();
-        writer.close();
-
-        return true;
-    }
-    // Overload to save any pet
     public boolean savePet(Pet pet){
         if (pet == null){
             System.out.println("No pet to save");
             return false;
         }
         return pet.save();
-    }
-
-    public boolean loadPet(){
-        File file = new File("savefiles/pets/" + petSaveFilename);
-        Scanner scanner = null;
-
-        try{
-            scanner = new Scanner(file);
-        }
-        catch(Exception e){
-            // FileNotFoundException
-            return false;
-        }
-
-        HashMap<String, String> stats = new HashMap<>();
-
-        try{
-            // An attempt to make a loopable readable file with variable names and data
-            String line = "";
-            String[] parts;
-            while (scanner.hasNext()){
-                line = scanner.nextLine();
-                parts = line.split(" ");
-                stats.put(parts[0], parts[1]);
-
-                // This part is in case I want to have several children
-                //Todo
-
-            }
-        }
-        catch(Exception e){
-            System.out.println("Couldn't get the next line in reading the " + file + " file.");
-            scanner.close();
-            return false;
-        }
-
-        scanner.close();
-
-        if (! makePet(stats)){
-            System.out.println("Couldn't make pet of type " + stats.get("type"));
-            return false;
-        }
-
-        return true;
-    }
-
-
-    private boolean makePet(HashMap<String, String> stats){
-        if (stats.get("type").equals("TestPet01")){
-            pet = new TestPet01(stats);
-            pet.setModel(this);
-            return true;
-        }
-        return false;
     }
 
 
@@ -205,18 +121,6 @@ class Model{
     public void inspect(){
         // Loads the eggs (and pets?) in memory from files and lets you see their data
 
-    }
-
-    // saving and loading
-    private boolean saveInventory(){
-        // Trying to figure out how to do this.
-
-        return false;
-    }
-
-    private boolean loadInventory(){
-
-        return false;
     }
 
     public Inventory getInventory(){
