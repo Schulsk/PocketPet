@@ -11,5 +11,5 @@ abstract class Egg extends Pet{
         super(stats);
     }
 
-
+    
 }

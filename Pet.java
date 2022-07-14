@@ -171,6 +171,11 @@ abstract class Pet{
         return string;
     }
 
+    public String getFullSavePath(){
+        String string = savefileDirectory + getSavefileName();
+        return string;
+    }
+
     public String getSaveFormat(){
         String string = "";
         string += "type " + type;
@@ -406,7 +411,7 @@ abstract class Pet{
     }
 
     private void setValuesNotInFile(){
-        maxAge = 90;
+        maxAge = 259200000;
         maxHunger = 80000000;
         age = 0;
         starveThreshold = 0.2;

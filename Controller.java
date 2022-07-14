@@ -64,6 +64,35 @@ class Controller{
         }
     }
 
+    public boolean changePet(String newPetSavefileName){
+        try{
+            lock.lock();
+            if (!model.changePet(newPetSavefileName)){
+                return false;
+            }
+            return true;
+        }
+        finally{
+            lock.unlock();
+        }
+    }
+
+    public void unloadPet(){
+        model.unloadPet();
+    }
+
+    public boolean loadPet(String filename){
+        if (model.loadPet(filename) == null){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean renamePet(String newName){
+        model.renamePet(newName);
+        return true;
+    }
+
     public Pet getPet(){
         return model.getPet();
     }
@@ -84,8 +113,14 @@ class Controller{
         return model.getTime();
     }
 
+
+    //Inventory stuff
     public Inventory getInventory(){
         return model.getInventory();
+    }
+
+    public String withdraw(int index){
+        return model.getInventory().withdraw(index);
     }
 
     public boolean quit(){

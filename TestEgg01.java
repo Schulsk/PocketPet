@@ -13,7 +13,4 @@ class TestEgg01 extends Egg{
         setType("TestEgg01");
     }
 
-    public String toString(){
-        return name;
-    }
 }

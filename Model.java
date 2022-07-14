@@ -102,6 +102,16 @@ class Model{
         return pet.save();
     }
 
+    public Pet loadPet(String SavefileName){
+        pet = Pet.load(SavefileName);
+        return pet;
+    }
+
+    public void unloadPet(){
+        savePet(pet);
+        pet = null;
+    }
+
 
     // Inventory
     // Handling
@@ -131,13 +141,25 @@ class Model{
     // Pet handling
     public void renamePet(String newName){
         // Gotta delete the old pet-savefile and make a new with the new name after this is done
-        File oldPetSavefile = new File(pet.getSavefileName());
+        File oldPetSavefile = new File(pet.getFullSavePath());
 
         pet.setName(newName);
 
-        File newPetSavefile = new File(pet.getSavefileName());
+        //File newPetSavefile = new File(pet.getSavefileName());
         savePet(pet);
         oldPetSavefile.delete();
+    }
+
+    // When this works I need to do seperate methods so the system can unload
+    // pet, and the nload pet from memory without craching when no pet is loaded
+    public boolean changePet(String newPetSavefileName){
+        Pet newPet = Pet.load(newPetSavefileName);
+        if (newPet == null){
+            return false;
+        }
+        savePet(pet);
+        pet = newPet;
+        return true;
     }
 
 

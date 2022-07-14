@@ -93,6 +93,20 @@ class Inventory{
         return eggSlots;
     }
 
+    // Fetching
+    public String withdraw(int index){
+        try{
+            String temp = eggSlots[index].removeItem();
+            eggSlots[index] = null;
+            return temp;
+        }
+        catch(Exception e){
+            System.out.println("Index out of bounds");
+            return null;
+        }
+    }
+
+
 
     // Saving and loading
     public boolean save(){

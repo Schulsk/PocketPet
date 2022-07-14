@@ -10,8 +10,6 @@ class Main{
 
         UpdateMonitor monitor = controller.getMonitor();
 
-
-
         // Main loop
         Scanner scanner = new Scanner(System.in);
         String inp = "";
@@ -22,13 +20,17 @@ class Main{
             System.out.println("T - Time");
             System.out.println("E - Lay egg");
             System.out.println("I - Inspect inventory");
+            System.out.println("U - Unload pet");
+            System.out.println("L - Load pet from Inventory");
+            System.out.println("C - Change pet");
+            System.out.println("R - Rename pet");
             System.out.println("Q - Quit");
             System.out.println();
 
             inp = scanner.nextLine().toLowerCase();
 
             if (inp.equals("f")){
-                controller.getPet().eat(new Food(3600000));
+                controller.getPet().eat(new Food(TimeConverter.hoursToMillis(6)));
                 System.out.println("Pet has been fed");
             }
             else if (inp.equals("s")){
@@ -58,6 +60,43 @@ class Main{
             }
             else if (inp.equals("i")){
                 System.out.println(controller.getInventory());
+            }
+            else if (inp.equals("u")){
+                controller.unloadPet();
+            }
+            else if (inp.equals("l")){
+                System.out.println("You can choose between the pets you have in inventory (1, 2, 3):");
+                System.out.println(controller.getInventory());
+                inp = scanner.nextLine();
+                int index = Integer.parseInt(inp) - 1;
+                String petFile = controller.withdraw(index);
+                controller.loadPet(petFile);
+
+                if (controller.getPet() != null){
+                    System.out.println("Pet changed");
+                }
+                else{
+                    System.out.println("Couldn't change to that pet");
+                }
+            }
+            else if (inp.equals("c")){
+                System.out.println("You can choose between the pets you have in inventory:");
+                System.out.println(controller.getInventory());
+                inp = scanner.nextLine();
+                if (controller.changePet(inp)){
+                    System.out.println("Pet changed");
+                }
+                else{
+                    System.out.println("Couldn't change to that pet");
+                }
+                inp = "c";
+            }
+            else if (inp.equals("r")){
+                System.out.println("What do you want to name your pet?");
+                inp = scanner.nextLine();
+                controller.renamePet(inp);
+                System.out.println("Pet renamed");
+                inp = "r";
             }
             else if (inp.equals("t")){
                 System.out.println("Time: " + controller.getTime());
