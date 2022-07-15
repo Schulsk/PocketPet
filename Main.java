@@ -9,6 +9,7 @@ class Main{
         System.out.println("Game loaded");
 
         UpdateMonitor monitor = controller.getMonitor();
+        
 
         // Main loop
         Scanner scanner = new Scanner(System.in);
@@ -70,7 +71,7 @@ class Main{
                 inp = scanner.nextLine();
                 int index = Integer.parseInt(inp) - 1;
                 String petFile = controller.withdraw(index);
-                controller.loadPet(petFile);
+                controller.loadPetSlot(petFile);
 
                 if (controller.getPet() != null){
                     System.out.println("Pet changed");

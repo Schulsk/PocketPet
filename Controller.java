@@ -81,8 +81,8 @@ class Controller{
         model.unloadPet();
     }
 
-    public boolean loadPet(String filename){
-        if (model.loadPet(filename) == null){
+    public boolean loadPetSlot(String filename){
+        if (!model.loadPetSlot(filename)){
             return false;
         }
         return true;
@@ -134,4 +134,5 @@ class Controller{
         }
         return true;
     }
+    
 }

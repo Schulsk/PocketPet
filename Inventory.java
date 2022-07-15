@@ -107,7 +107,6 @@ class Inventory{
     }
 
 
-
     // Saving and loading
     public boolean save(){
         File file = new File(savefilePath);

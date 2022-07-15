@@ -10,7 +10,7 @@ class Model{
 
     private File savefile = new File("savefiles/savefile.txt");
     private Pet pet;
-    private String petSaveFilename = "petSave.txt";
+    private String petSavefileName = "petSave.txt";
     //private String inventorySaveFilename = "inventorySavefile.txt";
     private long time;
 
@@ -28,7 +28,7 @@ class Model{
         }
 
         Pet.setPetCount(Integer.parseInt(scanner.nextLine()));
-        petSaveFilename = scanner.nextLine();
+        petSavefileName = scanner.nextLine();
 
         scanner.close();
 
@@ -52,7 +52,7 @@ class Model{
             return false;
         }
 
-        if (!savePet(pet)){
+        if (!Saver.savePet(pet)){
             return false;
         }
 
@@ -83,7 +83,7 @@ class Model{
             return false;
         }
 
-        pet = Pet.load(petSaveFilename);
+        pet = Loader.loadPet(petSavefileName);
         if (pet == null){
             System.out.println("Couldn't load pet");
             return false;
@@ -93,24 +93,17 @@ class Model{
     }
 
 
-    // Pet saving and loading
-    public boolean savePet(Pet pet){
-        if (pet == null){
-            System.out.println("No pet to save");
-            return false;
-        }
-        return pet.save();
-    }
-
-    public Pet loadPet(String SavefileName){
-        pet = Pet.load(SavefileName);
-        return pet;
+    public boolean loadPetSlot(String SavefileName){
+        // Use this to load the pet slot of the Model
+        pet = Loader.loadPet(SavefileName);
+        return pet != null;
     }
 
     public void unloadPet(){
-        savePet(pet);
+        Saver.savePet(pet);
         pet = null;
     }
+
 
 
     // Inventory
@@ -146,18 +139,18 @@ class Model{
         pet.setName(newName);
 
         //File newPetSavefile = new File(pet.getSavefileName());
-        savePet(pet);
+        Saver.savePet(pet);
         oldPetSavefile.delete();
     }
 
     // When this works I need to do seperate methods so the system can unload
     // pet, and the nload pet from memory without craching when no pet is loaded
     public boolean changePet(String newPetSavefileName){
-        Pet newPet = Pet.load(newPetSavefileName);
+        Pet newPet = Loader.loadPet(newPetSavefileName);
         if (newPet == null){
             return false;
         }
-        savePet(pet);
+        Saver.savePet(pet);
         pet = newPet;
         return true;
     }
@@ -175,3 +168,12 @@ class Model{
         return time;
     }
 }
+
+
+
+
+
+/*
+    * What happens if I save when pet = null? And then what if I load that savefile?
+
+*/

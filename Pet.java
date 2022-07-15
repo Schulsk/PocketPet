@@ -374,7 +374,6 @@ abstract class Pet{
     }
 
 
-
     // Other
 
     public static void setPetCount(int newPetCount){
