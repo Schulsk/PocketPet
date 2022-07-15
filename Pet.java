@@ -6,7 +6,7 @@ import java.io.File;
 import java.util.Scanner;
 
 
-// abstract
+
 abstract class Pet{
     final static String savefileDirectory = "savefiles/pets/";
     private Model model = null;     // Old
@@ -101,9 +101,6 @@ abstract class Pet{
         parent = stats.get("parent");
         children[0] = stats.get("children");
 
-
-        //setEggLayingTimes(3);
-
         // Do catchup in case player has been gone for a while
         catchUp();
     }
@@ -137,10 +134,8 @@ abstract class Pet{
         }
     }
 
-    public void setModel(Model model){
-        this.model = model;
-    }
 
+    // Representation
     @Override
     public String toString(){
         String string = "";
@@ -203,75 +198,6 @@ abstract class Pet{
         */
 
         return string;
-    }
-
-    /*
-    Maybe I'll make static saver and loader objects that can save and load all
-    the different items that I need to handle?
-
-    */
-    public boolean save(){
-        File file = new File(savefileDirectory + getSavefileName());
-        PrintWriter writer = null;
-        try{
-            writer = new PrintWriter(file);
-        }
-        catch(Exception e){
-            return false;
-        }
-
-        writer.print(getSaveFormat());
-        writer.close();
-
-        return true;
-    }
-
-    public static Pet load(String savefileName){
-        /*
-        Todo
-        */
-
-        Pet loaded = null;
-        File file = new File(savefileDirectory + savefileName);
-        Scanner scanner = null;
-        try{
-            scanner = new Scanner(file);
-        }
-        catch(Exception e){
-            System.out.println(e);
-            return null;
-        }
-
-        HashMap<String, String> stats = new HashMap<>();
-        try{
-            // Read file and put into stats
-            while (scanner.hasNext()){
-                String[] line = scanner.nextLine().split(" ");
-                stats.put(line[0], line[1]);
-            }
-        }
-        catch(Exception e){
-            System.out.println(e);
-            System.out.println("Error when reading file and splitting lines");
-            scanner.close();
-            return null;
-        }
-        scanner.close();
-
-        // Make the pet
-        if (stats.get("type").equals("TestPet01")){
-            loaded = new TestPet01(stats);
-        }
-        else if (stats.get("type").equals("TestEgg01")){
-            loaded = new TestEgg01(stats);
-        }
-
-        return loaded;
-    }
-
-
-    protected void setType(String type){
-        this.type = type;
     }
 
 
@@ -367,8 +293,19 @@ abstract class Pet{
     // Public for testing purposes
     public void layEgg(){
         // gotta figure out a way to choose types here
+        /*
+        I also might want to change how I do the saving and stuff here. I would
+        prefer to make the Pet class not dependent on the Saver class, so I
+        think I might make the egg be an Egg pointer that stores the egg in
+        memory until the model picks it up from there on the next update.
+        To make this work smoothly, in case the updates are called rarely, could
+        I make the pet save itself upon creation or something? I don't think so,
+        but it might not matter that much, because if the process is terminated
+        before saving, the pet will just lay the egg again the next time they
+        are loaded, and then they wil be picked up and saved.
+        */
         Egg temp = new TestEgg01(lastTimeCheck, getSavefileName());
-        temp.save();
+        Saver.savePet(temp);
         egg = temp.getSavefileName();
         children[0] = egg;
     }
@@ -410,6 +347,10 @@ abstract class Pet{
         this.name = name;
     }
 
+    protected void setType(String type){
+        this.type = type;
+    }
+
     private void setValuesNotInFile(){
         maxAge = 259200000;
         maxHunger = 80000000;
@@ -427,6 +368,11 @@ abstract class Pet{
         eggLayingTimes = new double[3];
     }
 
+    // might delete this
+    public void setModel(Model model){
+        this.model = model;
+    }
+
 
 
     // Other
@@ -438,6 +384,70 @@ abstract class Pet{
     public static int getPetCount(){
         return petCount;
     }
+
+
+    // Here are the old save and load methods in case I want to go back to the
+    // way I did it before where each class handled all of that themselves
+    // I felt it was clean in a way, but maybe not in line with all the advice I
+    // read online
+    /*
+    public boolean save(){
+        File file = new File(savefileDirectory + getSavefileName());
+        PrintWriter writer = null;
+        try{
+            writer = new PrintWriter(file);
+        }
+        catch(Exception e){
+            return false;
+        }
+
+        writer.print(getSaveFormat());
+        writer.close();
+
+        return true;
+    }
+
+    public static Pet load(String savefileName){
+
+        Pet loaded = null;
+        File file = new File(savefileDirectory + savefileName);
+        Scanner scanner = null;
+        try{
+            scanner = new Scanner(file);
+        }
+        catch(Exception e){
+            System.out.println(e);
+            return null;
+        }
+
+        HashMap<String, String> stats = new HashMap<>();
+        try{
+            // Read file and put into stats
+            while (scanner.hasNext()){
+                String[] line = scanner.nextLine().split(" ");
+                stats.put(line[0], line[1]);
+            }
+        }
+        catch(Exception e){
+            System.out.println(e);
+            System.out.println("Error when reading file and splitting lines");
+            scanner.close();
+            return null;
+        }
+        scanner.close();
+
+        // Make the pet
+        if (stats.get("type").equals("TestPet01")){
+            loaded = new TestPet01(stats);
+        }
+        else if (stats.get("type").equals("TestEgg01")){
+            loaded = new TestEgg01(stats);
+        }
+
+        return loaded;
+    }
+
+    */
 
 
 
