@@ -4,11 +4,11 @@ id 0
 alive true
 birthtime 1657691825998
 deathtime 0
-lastTimeCheck 1657793424420
-hunger 79926000
-lastFed 1657793350420
-totalTimeStarving 15846000
-totalTimeFull 25986000
+lastTimeCheck 1657866390082
+hunger 71760338
+lastFed 1657866374082
+totalTimeStarving 24863000
+totalTimeFull 41928000
 parent 4444_Gilgamesh.txt
 children null
 egg null

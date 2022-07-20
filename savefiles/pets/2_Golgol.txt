@@ -1,0 +1,15 @@
+type TestEgg01
+name Golgol
+id 2
+alive true
+birthtime 1658075767354
+deathtime 0
+lastTimeCheck 1658304061588
+hunger 79465702
+lastFed 1658303527290
+totalTimeStarving 19570000
+totalTimeFull 49401000
+parent 1_Gagagogo.txt
+children 3_unnamed.txt
+egg null
+eggLayingTimes 0.0

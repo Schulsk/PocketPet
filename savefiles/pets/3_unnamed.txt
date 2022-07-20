@@ -1,0 +1,15 @@
+type TestEgg01
+name unnamed
+id 3
+alive false
+birthtime 1658184077778
+deathtime 1658264077778
+lastTimeCheck 1658303835152
+hunger 0
+lastFed 1658184077778
+totalTimeStarving 16000000
+totalTimeFull 16000000
+parent 2_Golgol.txt
+children 4_unnamed.txt
+egg null
+eggLayingTimes 0.0

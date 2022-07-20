@@ -28,6 +28,8 @@ class Saver extends General{
         return true;
     }
 
+    // Gotta make Slot a public class for this to work
+    /*
     static public boolean saveInventory(Inventory inventory){
         File file = new File(inventorySavefileDirectory + "inventorySavefile");
         PrintWriter writer = null;
@@ -47,5 +49,6 @@ class Saver extends General{
 
         return true;
     }
-    
+    */
+
 }

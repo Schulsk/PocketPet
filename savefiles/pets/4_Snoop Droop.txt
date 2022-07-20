@@ -1,0 +1,15 @@
+type TestEgg01
+name Snoop Droop
+id 4
+alive true
+birthtime 1658190788778
+deathtime 1658303898152
+lastTimeCheck 1658304256830
+hunger 79932000
+lastFed 1658304188830
+totalTimeStarving 16147000
+totalTimeFull 16070000
+parent 3_unnamed.txt
+children null
+egg null
+eggLayingTimes 0.9665816733809325

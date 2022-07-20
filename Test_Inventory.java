@@ -14,10 +14,10 @@ class Test_Inventory{
         Egg egg02 = new TestEgg01(time, "null");
         Egg egg03 = new TestEgg01(time, "null");
 
-        egg00.save();
-        egg01.save();
-        egg02.save();
-        egg03.save();
+        Saver.savePet(egg00);
+        Saver.savePet(egg01);
+        Saver.savePet(egg02);
+        Saver.savePet(egg03);
 
         String egg00SaveFile = egg00.getSavefileName();
         String egg01SaveFile = egg01.getSavefileName();
