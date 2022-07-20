@@ -4,11 +4,11 @@ id 4
 alive true
 birthtime 1658190788778
 deathtime 1658303898152
-lastTimeCheck 1658304311107
-hunger 79877723
+lastTimeCheck 1658320795304
+hunger 63393526
 lastFed 1658304188830
 totalTimeStarving 16147000
-totalTimeFull 16125000
+totalTimeFull 32002000
 parent 3_unnamed.txt
 children null
 egg null
