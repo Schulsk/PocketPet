@@ -4,11 +4,11 @@ id 2
 alive true
 birthtime 1658075767354
 deathtime 0
-lastTimeCheck 1658320787304
-hunger 79962000
-lastFed 1658320749304
+lastTimeCheck 1658408616315
+hunger 79985000
+lastFed 1658408601315
 totalTimeStarving 19570000
-totalTimeFull 64905000
+totalTimeFull 112885000
 parent 1_Gagagogo.txt
 children 3_unnamed.txt
 egg null

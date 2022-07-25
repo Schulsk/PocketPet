@@ -1,4 +1,4 @@
-
+package basic;
 
 
 class Test_Inventory{

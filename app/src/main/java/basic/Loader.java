@@ -1,9 +1,10 @@
+package basic;
 
 import java.io.File;
 import java.util.Scanner;
 import java.util.HashMap;
 
-class Loader extends General{
+public class Loader extends General{
 
     public static Pet loadPet(String savefileName){
         Pet loaded = null;

@@ -1,0 +1,15 @@
+type TestEgg01
+name Snoop
+id 4
+alive false
+birthtime 1658190788778
+deathtime 1658488565315
+lastTimeCheck 1658488848569
+hunger 0
+lastFed 1658408565315
+totalTimeStarving 32147000
+totalTimeFull 80007000
+parent 3_unnamed.txt
+children 4_unnamed.txt
+egg null
+eggLayingTimes 0.0

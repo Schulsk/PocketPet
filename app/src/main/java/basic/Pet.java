@@ -1,3 +1,4 @@
+package basic;
 
 import java.util.Random;
 import java.util.HashMap;
@@ -458,6 +459,9 @@ abstract class Pet{
         as it should.
         * Due to the way I now do petSave-files I should check that the file has
         valid values for all the variables.
+        * Can't have pets with spaces in their names. You just load the first
+        part of the name then
+        * If state is not saved when an egg is laid, the id numbering is fucked
     */
 
 }

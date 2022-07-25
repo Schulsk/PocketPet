@@ -1,3 +1,4 @@
+package basic;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -5,7 +6,7 @@ import java.util.Scanner;
 
 // This is a static saver object that has the function of saving all the objects
 // that need saving in the project
-class Saver extends General{
+public class Saver extends General{
 
     public static boolean savePet(Pet pet){
         if (pet == null){
@@ -24,6 +25,22 @@ class Saver extends General{
         }
 
         writer.print(pet.getSaveFormat());
+        writer.close();
+        return true;
+    }
+
+    public static boolean makeNewSavefile(){
+        File file = new File(stateSavefileDirectory + "/savefile.txt");
+        PrintWriter writer = null;
+        try{
+            writer = new PrintWriter(file);
+        }
+        catch(Exception e){
+            System.out.println("Saver - Couldn't make new savefile");
+            return false;
+        }
+        writer.println("0");
+        writer.println("null");
         writer.close();
         return true;
     }

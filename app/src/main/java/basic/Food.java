@@ -1,4 +1,4 @@
-
+package basic;
 
 class Food implements Consumable{
 

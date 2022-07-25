@@ -1,0 +1,15 @@
+type TestEgg01
+name Droopy
+id 4
+alive true
+birthtime 1658441326315
+deathtime 0
+lastTimeCheck 1658578379859
+hunger 79791575
+lastFed 1658578177434
+totalTimeStarving 0
+totalTimeFull 16216000
+parent 4_Snoop.txt
+children null
+egg null
+eggLayingTimes 0.6947541408610036

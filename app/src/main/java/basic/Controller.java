@@ -1,11 +1,11 @@
-
+package basic;
 
 import java.lang.Thread;
 import java.util.concurrent.locks.ReentrantLock;
 import java.lang.InterruptedException;
 
 
-class Controller{
+public class Controller{
 
     Model model;
     Thread update;
@@ -16,6 +16,7 @@ class Controller{
 
 
     public Controller(){
+        System.out.println("Made the controller object");
         model = new Model();
         //monitor = new UpdateMonitor(this);
         lock = new ReentrantLock();
@@ -24,6 +25,7 @@ class Controller{
         // Start the update thread
         update = new Thread(new Update(this));
         update.start();
+
     }
 
     public void update(){

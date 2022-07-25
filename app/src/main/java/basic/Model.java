@@ -1,3 +1,4 @@
+package basic;
 
 import java.io.File;
 import java.util.Scanner;
@@ -8,7 +9,8 @@ class Model{
     // petCounter used in the save file system
     private int petCounter;
 
-    private File savefile = new File("savefiles/savefile.txt");
+    private File savefile = new File(General.getStateSavefileDirectory() + "savefile.txt");
+    private File savefileDirectory = new File(General.getStateSavefileDirectory());
     private Pet pet;
     private String petSavefileName = "petSave.txt";
     //private String inventorySaveFilename = "inventorySavefile.txt";
@@ -18,13 +20,34 @@ class Model{
     private Inventory inventory;
 
     public Model(){
+        // Checking for savefile
         Scanner scanner = null;
         try{
             scanner = new Scanner(savefile);
         }
         catch(Exception e){
             System.out.println("The savefile could not be found");
-            System.exit(1);
+            // make new savefile
+            if(!savefileDirectory.exists()){
+                System.out.println("making new savefiledirectory");
+                System.out.println(savefileDirectory.getPath());
+                System.out.println(savefileDirectory.mkdir());
+                System.out.println(new File(savefileDirectory + "/pets").mkdir());
+            }
+            if (Saver.makeNewSavefile()){
+                // This is a terrible way to do this
+                try{
+                    scanner = new Scanner(savefile);
+                }
+                catch(Exception ex){
+                    System.out.println("Couldn't find newly made savefile");
+                    System.exit(4);
+                }
+            }
+            else{
+                System.exit(1);
+            }
+
         }
 
         Pet.setPetCount(Integer.parseInt(scanner.nextLine()));
@@ -102,6 +125,15 @@ class Model{
     public void unloadPet(){
         Saver.savePet(pet);
         pet = null;
+    }
+
+    public void firstTimeFileSetup(){
+        // Working here at the moment -------------------------------------------------------------------------
+        new File(General.getStateSavefileDirectory()).mkdir();
+        //todo: make the default savefile
+
+        new File(General.getPetSavefileDirectory()).mkdir();
+        //todo: make the default Pet file
     }
 
 
