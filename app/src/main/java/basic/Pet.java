@@ -48,6 +48,10 @@ abstract class Pet{
     //private HashMap<String, Pet> children;
     private int id;
 
+    // State stuff
+    private String state = "idle";
+    private long stateCounter;
+
     private static int petCount = 0;        // I think maybe the model should handle this
 
     // Creating a new pet
@@ -120,6 +124,25 @@ abstract class Pet{
             checkForEggLaying();
         }
 
+        // State stuff
+        if (state.equals("idle")){
+            // todo: check if the criteria for happy, sad or angry are met, and change if they are
+        }
+        else if (state.equals("eating")){
+            if (stateCounter-- < 0){
+                state = "idle";
+            }
+        }
+        else if (state.equals("happy")){
+            // todo
+        }
+        else if (state.equals("sad")){
+            //todo
+        }
+        else if (state.equals("angry")){
+            //todo
+        }
+
         // Last thing
         lastTimeCheck = currentTime;
     }
@@ -159,6 +182,18 @@ abstract class Pet{
 
         return string;
     }
+
+
+    // State stuff
+    private void changeState(String newState, long newStateCounter){
+        state = newState;
+        stateCounter = newStateCounter;
+    }
+
+    private void changeState(String newState){
+        state = newState;
+    }
+
 
     // Saving and loading
 
@@ -263,6 +298,8 @@ abstract class Pet{
             hunger = maxHunger;
         }
         lastFed = lastTimeCheck;      // maybe change this to use current time
+        changeState("eating", TimeConverter.secondsToMillis(2));
+
     }
 
 
@@ -462,6 +499,7 @@ abstract class Pet{
         * Can't have pets with spaces in their names. You just load the first
         part of the name then
         * If state is not saved when an egg is laid, the id numbering is fucked
+        * If state is not saved when a pet is changed, things might get fucked
     */
 
 }

@@ -1,0 +1,15 @@
+type TestEgg01
+name Gigi
+id 7
+alive true
+birthtime 1658775543854
+deathtime 0
+lastTimeCheck 1658947227721
+hunger 79949000
+lastFed 1658947176721
+totalTimeStarving 0
+totalTimeFull 31069000
+parent 6_Hansen.txt
+children null
+egg null
+eggLayingTimes 0.8978806368326734

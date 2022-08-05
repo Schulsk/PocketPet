@@ -187,6 +187,12 @@ class Model{
         return true;
     }
 
+    public void feedPet(){
+        if (pet != null){
+            pet.eat(new Food(TimeConverter.hoursToMillis(6)));
+        }
+    }
+
 
 
 

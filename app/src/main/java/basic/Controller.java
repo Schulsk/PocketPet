@@ -95,6 +95,10 @@ public class Controller{
         return true;
     }
 
+    public void feedPet(){
+        model.feedPet();
+    }
+
     public Pet getPet(){
         return model.getPet();
     }

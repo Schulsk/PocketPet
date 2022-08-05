@@ -1,0 +1,15 @@
+type TestEgg01
+name unnamed
+id 8
+alive true
+birthtime 1658754249878
+deathtime 0
+lastTimeCheck 1658754249878
+hunger 80000000
+lastFed 1658754249878
+totalTimeStarving 0
+totalTimeFull 0
+parent 5_Bjarne.txt
+children null
+egg null
+eggLayingTimes 0.44843346239871695
