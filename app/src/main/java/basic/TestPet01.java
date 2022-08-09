@@ -3,7 +3,7 @@ package basic;
 import java.util.HashMap;
 
 
-class TestPet01 extends Pet{
+public class TestPet01 extends Pet{
 
     public TestPet01(long currentTime, String parent){
         super(currentTime, parent);

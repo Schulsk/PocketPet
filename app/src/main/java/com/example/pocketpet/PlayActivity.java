@@ -12,13 +12,19 @@ import android.widget.ImageView;
 import basic.Controller;
 import basic.General;
 
+import ViewUpdate.ViewUpdate;
+import basic.Pet;
+import basic.Saver;
+import basic.TestPet01;
+
 public class PlayActivity extends AppCompatActivity {
 
     AnimationDrawable petAnimation;
     Controller controller;
 
+    Thread viewUpdate;
 
-    // Handle all the activity lifecycle things
+    /**     Handle all the activity lifecycle things        */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +35,7 @@ public class PlayActivity extends AppCompatActivity {
         controller = new Controller();
 
         ImageView petImageView = findViewById(R.id.imageView2);
-        petImageView.setBackgroundResource(R.drawable.beaky_idle_animation);
+        petImageView.setBackgroundResource(R.drawable.empty_animation);
         petAnimation = (AnimationDrawable) petImageView.getBackground();
 
         // Buttons
@@ -45,9 +51,43 @@ public class PlayActivity extends AppCompatActivity {
         feedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                controller.feedPet();
+                clickFeed();
             }
         });
+
+        Button changeMoodButton = findViewById(R.id.change_mood_button);
+        changeMoodButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Pet pet = controller.getPet();
+                System.out.println("Pet: " + pet);
+                if (pet != null){
+                    if (!pet.getState().equals("happy")){
+                        pet.setState("happy");
+                        System.out.println("happy");
+                    }
+                    else if (!pet.getState().equals("idle")){
+                        pet.setState("idle");
+                        System.out.println("idle");
+                    }
+                }
+            }
+        });
+
+        Button newPetButton = findViewById(R.id.new_pet_button);
+        newPetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Pet newPet = new TestPet01(controller.getTime(), "null");
+                System.out.println(newPet.getSavefileName());
+                Saver.savePet(newPet);
+                controller.loadPetSlot(newPet.getSavefileName());
+            }
+        });
+
+        // Make and start the ViewUpdate thread
+        viewUpdate = new Thread(new ViewUpdate(petImageView, controller.getModel(), this));
+        viewUpdate.start();
     }
 
     @Override
@@ -63,12 +103,19 @@ public class PlayActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        petAnimation.start();
+        controller.loadState();
+        if (petAnimation != null){
+            petAnimation.start();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        // todo save the state
+        controller.saveState();
+
+        // Stop the animation
         petAnimation.stop();
     }
 
@@ -84,8 +131,7 @@ public class PlayActivity extends AppCompatActivity {
     }
 
 
-
-    // Buttons
+    /**     Buttons     */
     private void clickMenu(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -102,5 +148,14 @@ public class PlayActivity extends AppCompatActivity {
         General.setStateSavefileDirectory(contextPath + "/savefiles/");
     }
 
-    // Hello testing testing
+    /**     Updating views      */
+    // I'm doing it this way because of an error I got that said only the thread that made a view
+    // hierarchy could touch its views
+    // Update: Unecesary it seems, but it's here in case I change my mind
+    public void updatePetView(int resource){
+        ImageView petView = findViewById(R.id.imageView2);
+        petView.setBackgroundResource(resource);
+        petAnimation = (AnimationDrawable) petView.getBackground();
+        petAnimation.start();
+    }
 }

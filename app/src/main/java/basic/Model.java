@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.io.PrintWriter;
 import java.util.HashMap;
 
-class Model{
+public class Model{
     // petCounter used in the save file system
     private int petCounter;
 
@@ -29,13 +29,13 @@ class Model{
             System.out.println("The savefile could not be found");
             // make new savefile
             if(!savefileDirectory.exists()){
-                System.out.println("making new savefiledirectory");
+                System.out.println("making new savefileDirectory");
                 System.out.println(savefileDirectory.getPath());
                 System.out.println(savefileDirectory.mkdir());
                 System.out.println(new File(savefileDirectory + "/pets").mkdir());
             }
             if (Saver.makeNewSavefile()){
-                // This is a terrible way to do this
+                // This is a terrible way to do this, try/catch within a catch
                 try{
                     scanner = new Scanner(savefile);
                 }
@@ -50,6 +50,7 @@ class Model{
 
         }
 
+        // Reading the savefile
         Pet.setPetCount(Integer.parseInt(scanner.nextLine()));
         petSavefileName = scanner.nextLine();
 
@@ -103,7 +104,11 @@ class Model{
     public boolean loadData(){
         inventory = Inventory.load();
         if (inventory == null){
-            return false;
+            System.out.println("No inventory savefile could be found. Making a new one");
+            Saver.makeNewInventorySavefile();
+            inventory = Inventory.load();
+            System.out.println("Inventory:\n" + inventory);
+            //return false;
         }
 
         pet = Loader.loadPet(petSavefileName);

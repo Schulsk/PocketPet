@@ -4,7 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/julia/Documents/OtherProjects/Java/PocketPet/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.226" />
+        <entry key="..\:/Users/julia/Documents/OtherProjects/Java/PocketPet/app/src/main/res/drawable/beaky_angry_animation.xml" value="0.146" />
+        <entry key="..\:/Users/julia/Documents/OtherProjects/Java/PocketPet/app/src/main/res/drawable/beaky_dead_animation.xml" value="0.1" />
+        <entry key="..\:/Users/julia/Documents/OtherProjects/Java/PocketPet/app/src/main/res/drawable/beaky_happy_animation.xml" value="0.146" />
         <entry key="..\:/Users/julia/Documents/OtherProjects/Java/PocketPet/app/src/main/res/drawable/beaky_idle_animation.xml" value="0.146" />
+        <entry key="..\:/Users/julia/Documents/OtherProjects/Java/PocketPet/app/src/main/res/drawable/beaky_sad_animation.xml" value="0.146" />
+        <entry key="..\:/Users/julia/Documents/OtherProjects/Java/PocketPet/app/src/main/res/drawable/beaky_walk_animation.xml" value="0.146" />
+        <entry key="..\:/Users/julia/Documents/OtherProjects/Java/PocketPet/app/src/main/res/drawable/empty_animation.xml" value="0.147" />
         <entry key="..\:/Users/julia/Documents/OtherProjects/Java/PocketPet/app/src/main/res/drawable/ic_launcher_background.xml" value="0.226" />
         <entry key="..\:/Users/julia/Documents/OtherProjects/Java/PocketPet/app/src/main/res/layout/activity_main.xml" value="0.290625" />
         <entry key="..\:/Users/julia/Documents/OtherProjects/Java/PocketPet/app/src/main/res/layout/activity_play.xml" value="0.290625" />

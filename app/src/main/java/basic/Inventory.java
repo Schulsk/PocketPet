@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 class Inventory{
     private Slot<String>[] eggSlots;
-    static final String savefilePath = "savefiles/inventorySavefile.txt";
+    static final String savefilePath = General.getInventorySavefileDirectory() + "inventorySavefile.txt";
 
 
     class Slot<T>{

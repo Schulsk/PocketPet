@@ -8,8 +8,8 @@ import java.util.Scanner;
 
 
 
-abstract class Pet{
-    final static String savefileDirectory = "savefiles/pets/";
+public abstract class Pet{
+    final static String savefileDirectory = General.getPetSavefileDirectory();
     private Model model = null;     // Old
     private Random random;
 
@@ -120,16 +120,21 @@ abstract class Pet{
             // Hunger
             checkHunger(currentTime);
         }
+        // A second check in case the pet died during the checks
         if (alive){
             checkForEggLaying();
         }
 
+
         // State stuff
+        updateState();
+
         if (state.equals("idle")){
             // todo: check if the criteria for happy, sad or angry are met, and change if they are
         }
         else if (state.equals("eating")){
-            if (stateCounter-- < 0){
+            stateCounter -= currentTime - lastTimeCheck;
+            if (stateCounter < 0){
                 state = "idle";
             }
         }
@@ -194,6 +199,19 @@ abstract class Pet{
         state = newState;
     }
 
+    private void updateState(){
+        if (stateCounter > 0){
+            return;
+        }
+        if (starving){
+            setState("sad");
+        }
+
+        if (!alive){
+            setState("dead");
+        }
+    }
+
 
     // Saving and loading
 
@@ -208,6 +226,8 @@ abstract class Pet{
     }
 
     public String getSaveFormat(){
+        // The order her edoes'nt matter that much because the reading of the file considers the
+        // keyword when the value is stored.
         String string = "";
         string += "type " + type;
         string += "\n" + "name " +  name;
@@ -242,7 +262,7 @@ abstract class Pet{
     private void calculateAge(long currentTime){
         age = currentTime - birthtime;
     }
-
+    // The following age related methods are not necessary now that we have the TimeConverter
     public int getAgeInSeconds(){
         return (int)(age / 1000);
     }
@@ -310,6 +330,7 @@ abstract class Pet{
         }
 
         alive = false;
+        setState("dead");
         deathtime = birthtime + age;
     }
 
@@ -412,6 +433,16 @@ abstract class Pet{
     }
 
 
+    // Evolving
+    private void evolve(){
+        switch (type){
+            case "TestEgg01":
+
+                break;
+        }
+    }
+
+
     // Other
 
     public static void setPetCount(int newPetCount){
@@ -421,6 +452,16 @@ abstract class Pet{
     public static int getPetCount(){
         return petCount;
     }
+
+    public String getState(){
+        return state;
+    }
+
+    // Temp
+    public void setState(String newState){
+        state = newState;
+    }
+
 
 
     // Here are the old save and load methods in case I want to go back to the

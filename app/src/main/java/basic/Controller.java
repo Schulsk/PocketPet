@@ -103,6 +103,8 @@ public class Controller{
         return model.getPet();
     }
 
+    public Model getModel(){return model;}
+
     public boolean getUpdating(){
         return updating;
     }
