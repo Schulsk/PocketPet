@@ -47,6 +47,7 @@ public abstract class Pet{
     private String[] children = new String[3];
     //private HashMap<String, Pet> children;
     private int id;
+    private boolean evolving;
 
     // State stuff
     private String state = "idle";
@@ -116,6 +117,7 @@ public abstract class Pet{
         if (alive){
             calculateAge(currentTime);
             // Todo: Check if too old
+            checkAge();
 
             // Hunger
             checkHunger(currentTime);
@@ -151,7 +153,8 @@ public abstract class Pet{
         // Last thing
         lastTimeCheck = currentTime;
     }
-
+    /** Todo: God damn idiot. This catchup thing clearly has to go in the model section, so that the
+     *  entire system simulates the time that has passed.*/
     public void catchUp(){
         long currentTime = System.currentTimeMillis();
         long simulatedTime = lastTimeCheck;
@@ -186,6 +189,17 @@ public abstract class Pet{
         string += "\nDays: " + getAgeInDays() + " Hours: " + getAgeInHours() + " Minutes: " + getAgeInMinutes() + " Seconds: " + getAgeInSeconds() + " Millis: " + age;
 
         return string;
+    }
+
+    public HashMap<String, String> getStats(){
+        HashMap<String, String> stats = new HashMap<>();
+        String[] info = getSaveFormat().split("\n");
+        for (String line : info){
+            String[] parts = line.split(" ");
+            stats.put(parts[0], parts[1]);
+        }
+        System.out.println(stats);
+        return stats;
     }
 
 
@@ -262,6 +276,12 @@ public abstract class Pet{
     private void calculateAge(long currentTime){
         age = currentTime - birthtime;
     }
+
+    private void checkAge(){
+        if (age > maxAge){
+            evolving = true;
+        }
+    }
     // The following age related methods are not necessary now that we have the TimeConverter
     public int getAgeInSeconds(){
         return (int)(age / 1000);
@@ -281,7 +301,7 @@ public abstract class Pet{
 
 
     // Hunger stuff
-    private void checkHunger(long currentTime){
+    protected void checkHunger(long currentTime){
         long digested = currentTime - lastTimeCheck;
 
         hunger -= digested;
@@ -309,7 +329,7 @@ public abstract class Pet{
         }
     }
 
-    public void eat(Consumable food){
+    protected void eat(Consumable food){
         if (!alive){
             return;
         }
@@ -324,7 +344,7 @@ public abstract class Pet{
 
 
     // Health stuff
-    private void die(){
+    protected void die(){
         if (!alive){
             return;
         }
@@ -425,6 +445,7 @@ public abstract class Pet{
         //step = 86400000 / timesADay;
         step = 1000;
         eggLayingTimes = new double[3];
+        evolving = false;
     }
 
     // might delete this
@@ -434,12 +455,12 @@ public abstract class Pet{
 
 
     // Evolving
-    private void evolve(){
-        switch (type){
-            case "TestEgg01":
+    public Pet evolve(){
+        return Evolver.evolve(this);
+    }
 
-                break;
-        }
+    public boolean isReadyToEvolve(){
+        return evolving;
     }
 
 
@@ -455,6 +476,10 @@ public abstract class Pet{
 
     public String getState(){
         return state;
+    }
+
+    public String getType(){
+        return type;
     }
 
     // Temp

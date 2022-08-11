@@ -4,7 +4,7 @@ import java.io.PrintWriter;
 import java.io.File;
 import java.util.Scanner;
 
-class Inventory{
+public class Inventory{
     private Slot<String>[] eggSlots;
     static final String savefilePath = General.getInventorySavefileDirectory() + "inventorySavefile.txt";
 
@@ -104,6 +104,17 @@ class Inventory{
         catch(Exception e){
             System.out.println("Index out of bounds");
             return null;
+        }
+    }
+
+    public String readSlotContent(int index){
+        try{
+            return eggSlots[index].toString();
+        }
+        catch(Exception e){
+            System.out.println(e);
+            System.out.println("Couldn't access the index at in the Inventory");
+            return "null";
         }
     }
 

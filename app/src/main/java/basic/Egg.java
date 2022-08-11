@@ -12,5 +12,8 @@ abstract class Egg extends Pet{
         super(stats);
     }
 
-
+    @Override
+    protected void checkHunger(long currentTime) {
+        // Do nothing. Eggs don't eat.
+    }
 }

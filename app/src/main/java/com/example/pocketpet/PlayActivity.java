@@ -24,6 +24,8 @@ public class PlayActivity extends AppCompatActivity {
 
     Thread viewUpdate;
 
+    private boolean inventoryOpen;
+
     /**     Handle all the activity lifecycle things        */
 
     @Override
@@ -31,9 +33,14 @@ public class PlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
+        // Make sure all the save paths are in order
         setAllSavePaths();
         controller = new Controller();
 
+        // Set the instance variables
+        inventoryOpen = false;
+
+        // Start the pet view
         ImageView petImageView = findViewById(R.id.imageView2);
         petImageView.setBackgroundResource(R.drawable.empty_animation);
         petAnimation = (AnimationDrawable) petImageView.getBackground();
@@ -71,6 +78,7 @@ public class PlayActivity extends AppCompatActivity {
                         System.out.println("idle");
                     }
                 }
+                pet.getStats();
             }
         });
 
@@ -84,6 +92,26 @@ public class PlayActivity extends AppCompatActivity {
                 controller.loadPetSlot(newPet.getSavefileName());
             }
         });
+
+        Button inventoryButton = findViewById(R.id.inventory_button);
+        inventoryButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                System.out.println("Inventory button clicked");
+
+                if (inventoryOpen){
+                    return;
+                }
+                Bundle bundle = new Bundle();
+                getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .add(R.id.fragmentContainerView, InventoryFragment.class, bundle)
+                        .commit();
+                inventoryOpen = true;
+                System.out.println("After inventory open");
+            }
+        });
+
 
         // Make and start the ViewUpdate thread
         viewUpdate = new Thread(new ViewUpdate(petImageView, controller.getModel(), this));

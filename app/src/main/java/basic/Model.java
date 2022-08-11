@@ -67,6 +67,9 @@ public class Model{
             if (pet.hasEgg()){
                 inventory.put(pet.removeEgg());
             }
+            if (pet.isReadyToEvolve()){
+                evolvePet();
+            }
         }
     }
 
@@ -198,7 +201,10 @@ public class Model{
         }
     }
 
-
+    public void evolvePet(){
+        pet = pet.evolve();
+        saveData();     // Not sure if I should do this here
+    }
 
 
     // Get and set methods

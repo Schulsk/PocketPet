@@ -14,4 +14,10 @@ public class TestPet01 extends Pet{
         super(stats);
         setType("TestPet01");
     }
+
+    @Override
+    public Pet evolve() {
+        die();
+        return this;
+    }
 }

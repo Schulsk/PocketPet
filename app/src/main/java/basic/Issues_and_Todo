@@ -1,7 +1,16 @@
 Todo:
+- Make an adult class that has an evolve method that calls the die method
+- Move the catchup functionality from the Pet to the Model
 - Inventory menu
 - Pet state changes
 - Add saving whenever the play activity is interrupted
 - Add loading whenever it starts back up
 
 Issues:
+
+
+Ideas:
+- Let each stage of a pet's life affect the longevity of the rest of the stages. For example: There
+  might be one egg type that makes all the rest of the stages last twice as long as they would if
+  they were raised from a normal egg. Can be achieved with a multiplier in the pet savefile that is
+  affected by all the different stages of its life.
