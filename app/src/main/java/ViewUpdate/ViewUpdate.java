@@ -10,6 +10,7 @@ import com.example.pocketpet.R;
 
 import java.lang.Runnable;
 
+import basic.Egg;
 import basic.Pet;
 import basic.Model;
 
@@ -20,6 +21,7 @@ public class ViewUpdate implements Runnable{
     Pet pet;
     Model model;
     String lastPetState;
+    String lastPetType;
     PlayActivity activity;
 
 
@@ -31,6 +33,7 @@ public class ViewUpdate implements Runnable{
         active = true;
         // Bad implementation, but I can't figure anything else out right now
         lastPetState = "";
+        lastPetType = "";
     }
 
     public void run(){
@@ -52,10 +55,15 @@ public class ViewUpdate implements Runnable{
             if (pet != null){
                 int resource = 0;
                 String petState = pet.getState();
+                String petType = pet.getType();
                 AnimationDrawable currentAnimation = (AnimationDrawable) view.getBackground();
 
-                if (lastPetState != petState){
-                    if (petState.equals("idle")){
+                if (shouldUpdate()){
+                    // This need to be done differently, I can't expand this code to several types
+                    if (pet instanceof Egg){
+                        resource = R.drawable.egg_idle_animation;
+                    }
+                    else if (petState.equals("idle")){
                         resource = R.drawable.beaky_idle_animation;
                         System.out.println("Pet state idle");
                     }
@@ -97,9 +105,21 @@ public class ViewUpdate implements Runnable{
                 // Set lastState
                 // lastState is used for checking if there is a need to change the animation
                 lastPetState = petState;
+                lastPetType = petType;
             }
 
         }
         // Thread done
+    }
+
+    private boolean shouldUpdate(){
+        if (lastPetState != pet.getState()){
+            return true;
+        }
+        if (lastPetType != pet.getType()){
+            return true;
+        }
+
+        return false;
     }
 }

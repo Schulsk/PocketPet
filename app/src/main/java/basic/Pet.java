@@ -14,13 +14,13 @@ public abstract class Pet{
     private Random random;
 
     protected String name;
-    private long babyTime, childTime, adultTime;
+    protected long eggTime, babyTime, childTime, adultTime;
     private String type = "";
     private String stage = "";
 
     // Health stuff
     private boolean alive, starving, full;
-    private long birthtime, deathtime, age;
+    protected long birthtime, eggBirthtime, deathtime, age;
     protected long maxAge;
     private long totalTimeStarving;
     private long totalTimeFull;
@@ -42,12 +42,12 @@ public abstract class Pet{
     // Other
     private long timesADay;
     private long step;
-    private long lastTimeCheck;
+    protected long lastTimeCheck;
     private String parent;
     private String[] children = new String[3];
     //private HashMap<String, Pet> children;
     private int id;
-    private boolean evolving;
+    protected boolean evolving;
 
     // State stuff
     private String state = "idle";
@@ -76,6 +76,7 @@ public abstract class Pet{
         egg = "null";
         eggLayingTimes[0] = random.nextDouble();
         id = petCount++;
+        eggTime = TimeConverter.hoursToMillis(6);
 
     }
     // Loading a pet from file
@@ -88,6 +89,7 @@ public abstract class Pet{
         name = stats.get("name");
         id = Integer.parseInt(stats.get("id"));
         // Time
+        eggBirthtime = Long.parseLong(stats.get("eggBirthtime"));
         birthtime = Long.parseLong(stats.get("birthtime"));
         deathtime = Long.parseLong(stats.get("deathtime"));
         lastTimeCheck = Long.parseLong(stats.get("lastTimeCheck"));
@@ -106,6 +108,7 @@ public abstract class Pet{
         // Other
         parent = stats.get("parent");
         children[0] = stats.get("children");
+        eggTime = Long.parseLong(stats.get("eggTime"));
 
         // Do catchup in case player has been gone for a while
         catchUp();
@@ -116,7 +119,7 @@ public abstract class Pet{
         //long currentTime = model.getTime();
         if (alive){
             calculateAge(currentTime);
-            // Todo: Check if too old
+            // Check if too old
             checkAge();
 
             // Hunger
@@ -214,6 +217,8 @@ public abstract class Pet{
     }
 
     private void updateState(){
+        // stateCounter is used for overriding other states, like if the pet is angry and gets fed,
+        // it'll still play the eating animation before going back to being angry
         if (stateCounter > 0){
             return;
         }
@@ -240,13 +245,14 @@ public abstract class Pet{
     }
 
     public String getSaveFormat(){
-        // The order her edoes'nt matter that much because the reading of the file considers the
+        // The order here doesn't matter that much because the reading of the file considers the
         // keyword when the value is stored.
         String string = "";
         string += "type " + type;
         string += "\n" + "name " +  name;
         string += "\n" + "id " +  id;
         string += "\n" + "alive " + alive;
+        string += "\n" + "eggBirthtime " + eggBirthtime;
         string += "\n" + "birthtime " + birthtime;
         string += "\n" + "deathtime " + deathtime;
         string += "\n" + "lastTimeCheck " + lastTimeCheck;
@@ -258,6 +264,7 @@ public abstract class Pet{
         string += "\n" + "children " + children[0];
         string += "\n" + "egg " + egg;
         string += "\n" + "eggLayingTimes " + eggLayingTimes[0];
+        string += "\n" + "eggTime " + eggTime;
 
         /*
         string += "\n" + "children ";
@@ -273,11 +280,11 @@ public abstract class Pet{
 
     // Age stuff
 
-    private void calculateAge(long currentTime){
+    protected void calculateAge(long currentTime){
         age = currentTime - birthtime;
     }
 
-    private void checkAge(){
+    protected void checkAge(){
         if (age > maxAge){
             evolving = true;
         }
@@ -323,9 +330,18 @@ public abstract class Pet{
         */
         if (hunger < maxHunger * starveThreshold){
             totalTimeStarving += step;
+            starving = true;
         }
-        else if (hunger > maxHunger * fullThreshold){
+        else{
+            starving = false;
+        }
+
+        if (hunger > maxHunger * fullThreshold){
             totalTimeFull += step;
+            full = true;
+        }
+        else{
+            full = false;
         }
     }
 
@@ -350,7 +366,7 @@ public abstract class Pet{
         }
 
         alive = false;
-        setState("dead");
+        //setState("dead");
         deathtime = birthtime + age;
     }
 

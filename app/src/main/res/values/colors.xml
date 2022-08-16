@@ -13,5 +13,9 @@
     <color name="blue_bell">#ADA7C9</color>
     <color name="thistle">#D7B9D5</color>
     <color name="mimi_pink">#F4CAE0</color>
+    <color name="grass_green">#4dc149</color>
+    <color name="grass_green_dark">#32892F</color>
+    <color name="sky_blue">#78DAE3</color>
+    <color name="sky_blue_dark">#26AEBA</color>
 
 </resources>

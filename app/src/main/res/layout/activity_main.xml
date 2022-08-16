@@ -48,7 +48,7 @@
         android:id="@+id/family_tree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Family tree"
+        android:text="Family tree (wip)"
         android:textSize="36sp"
         app:backgroundTint="@color/thistle"
         app:layout_constraintEnd_toEndOf="parent"

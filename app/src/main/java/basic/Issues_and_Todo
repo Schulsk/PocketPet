@@ -1,4 +1,8 @@
 Todo:
+- Make Button subclasses for all the different use cases I have, like CloseButton, InventorySlotButton etc.
+- Check the locks in the controller objects. I think they are not being locked when they should.
+- I think I should consider getting rid of the Controller class. It seems to have been a bad idea
+  based on my lack of understanding the MVC structure but still trying to adhere to it.
 - Make an adult class that has an evolve method that calls the die method
 - Move the catchup functionality from the Pet to the Model
 - Inventory menu
@@ -7,10 +11,23 @@ Todo:
 - Add loading whenever it starts back up
 
 Issues:
-
+- Eggs can lay eggs
+- When the pet slot in the model is updated the viewupdater needs to be told, or I have to
+  figure out another clever way to get it to update whenever things happen.
 
 Ideas:
+- Could do an envelope class for the Pets so that pets can evolve on their own. Not sure.
+- If I make an egg-shop that both buys and sells eggs, I could make events that happen when you sell
+  specific eggs. These events could give you access to certain things like equipment and other shops
+  etc. for instance could you try to sell an egg that is of the fossil type. Then the shop owner
+  would tell you that he knows someone that might be very interested in that egg (Here is room for
+  another idea too, where he makes a date with the guy and tells you to come back at a specific
+  day/time. If you fail to meet, you have to make a new date and try again.) He refers you, and you
+  unlock either a permanent access to the character, or you get a new item in the shop.
+- Maybe I should have just kept all stats in a hashmap, in stead of reassigning them to variables?
+  Perhaps not, The issue I'd meet then would be the different data types
 - Let each stage of a pet's life affect the longevity of the rest of the stages. For example: There
   might be one egg type that makes all the rest of the stages last twice as long as they would if
   they were raised from a normal egg. Can be achieved with a multiplier in the pet savefile that is
   affected by all the different stages of its life.
+- Cloning machine. Buy in the shop, and clone your pet into an egg.

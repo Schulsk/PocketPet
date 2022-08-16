@@ -1,6 +1,7 @@
 package com.example.pocketpet;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
@@ -15,7 +16,8 @@ import basic.General;
 import ViewUpdate.ViewUpdate;
 import basic.Pet;
 import basic.Saver;
-import basic.TestPet01;
+import basic.TestEgg01;
+import basic.ViewModelUI;
 
 public class PlayActivity extends AppCompatActivity {
 
@@ -25,6 +27,7 @@ public class PlayActivity extends AppCompatActivity {
     Thread viewUpdate;
 
     private boolean inventoryOpen;
+    private ViewModelUI viewModelUI;
 
     /**     Handle all the activity lifecycle things        */
 
@@ -33,15 +36,23 @@ public class PlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
+        // Make the ViewModels
+        final SimulationViewModel viewModel = new ViewModelProvider(this).get(SimulationViewModel.class);
+        viewModelUI = new ViewModelProvider(this).get(ViewModelUI.class);
+
         // Make sure all the save paths are in order
         setAllSavePaths();
-        controller = new Controller();
+        //controller = new Controller();
+        controller =  viewModel.getControllerLiveData().getValue();
 
         // Set the instance variables
         inventoryOpen = false;
 
+        // Start the background views
+
+
         // Start the pet view
-        ImageView petImageView = findViewById(R.id.imageView2);
+        ImageView petImageView = findViewById(R.id.pet_view);
         petImageView.setBackgroundResource(R.drawable.empty_animation);
         petAnimation = (AnimationDrawable) petImageView.getBackground();
 
@@ -86,7 +97,7 @@ public class PlayActivity extends AppCompatActivity {
         newPetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pet newPet = new TestPet01(controller.getTime(), "null");
+                Pet newPet = new TestEgg01(controller.getTime(), "null");
                 System.out.println(newPet.getSavefileName());
                 Saver.savePet(newPet);
                 controller.loadPetSlot(newPet.getSavefileName());
@@ -99,7 +110,7 @@ public class PlayActivity extends AppCompatActivity {
             public void onClick(View v){
                 System.out.println("Inventory button clicked");
 
-                if (inventoryOpen){
+                if (viewModelUI.isOpenInventory()){
                     return;
                 }
                 Bundle bundle = new Bundle();
@@ -107,7 +118,7 @@ public class PlayActivity extends AppCompatActivity {
                         .setReorderingAllowed(true)
                         .add(R.id.fragmentContainerView, InventoryFragment.class, bundle)
                         .commit();
-                inventoryOpen = true;
+                viewModelUI.openInventory();
                 System.out.println("After inventory open");
             }
         });
@@ -181,7 +192,7 @@ public class PlayActivity extends AppCompatActivity {
     // hierarchy could touch its views
     // Update: Unecesary it seems, but it's here in case I change my mind
     public void updatePetView(int resource){
-        ImageView petView = findViewById(R.id.imageView2);
+        ImageView petView = findViewById(R.id.pet_view);
         petView.setBackgroundResource(resource);
         petAnimation = (AnimationDrawable) petView.getBackground();
         petAnimation.start();
