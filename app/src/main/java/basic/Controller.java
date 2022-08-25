@@ -11,7 +11,7 @@ public class Controller{
     Thread update;
     UpdateMonitor monitor;
     ReentrantLock lock;
-    boolean updating = false;
+    boolean updating = false;       // Used to know when to shut down the updating thread
 
 
 
@@ -80,7 +80,13 @@ public class Controller{
     }
 
     public void unloadPet(){
-        model.unloadPet();
+        try{
+            lock.lock();
+            model.unloadPet();
+        }
+        finally{
+            lock.unlock();
+        }
     }
 
     public boolean loadPetSlot(String filename){
@@ -91,12 +97,24 @@ public class Controller{
     }
 
     public boolean renamePet(String newName){
-        model.renamePet(newName);
-        return true;
+        try{
+            lock.lock();
+            model.renamePet(newName);
+            return true;
+        }
+        finally{
+            lock.unlock();
+        }
     }
 
     public void feedPet(){
-        model.feedPet();
+        try{
+            lock.lock();
+            model.feedPet();
+        }
+        finally{
+            lock.unlock();
+        }
     }
 
     public Pet getPet(){
@@ -128,7 +146,13 @@ public class Controller{
     }
 
     public String withdraw(int index){
-        return model.getInventory().withdraw(index);
+        try{
+            lock.lock();
+            return model.getInventory().withdraw(index);
+        }
+        finally{
+            lock.unlock();
+        }
     }
 
     public boolean quit(){

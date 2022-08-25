@@ -1,21 +1,44 @@
 Todo:
-- Make Button subclasses for all the different use cases I have, like CloseButton, InventorySlotButton etc.
+- Make the inventory close itself when you click a button that loads a new pet
+- Make a system for when each stage/type is going to evolve. A max age for each of the evolutionary
+  stages
+- Make an adult class that has an evolve method that calls the die method
+- Make it move, make it matter
+- Make the pet poop
+- Make clods move across the sky
 - Check the locks in the controller objects. I think they are not being locked when they should.
 - I think I should consider getting rid of the Controller class. It seems to have been a bad idea
   based on my lack of understanding the MVC structure but still trying to adhere to it.
-- Make an adult class that has an evolve method that calls the die method
 - Move the catchup functionality from the Pet to the Model
+- Make Button subclasses for all the different use cases I have, like CloseButton, InventorySlotButton etc.
+Done:
 - Inventory menu
 - Pet state changes
 - Add saving whenever the play activity is interrupted
 - Add loading whenever it starts back up
 
 Issues:
+- I think I had an error here where the emulator was not in focus (don't know if that is
+  relevant) and the egg was laid, but the inventory slot was apparently null (Inventory.java:75)
+  Really not sure what happened there.
+- Had an error with an egg being born without it being caught by the inventory. Also the egg is
+  supposed to have been born way before it should have been. Checking things, it seems that it
+  looks weird because it was born from another egg. Not sure why that should make it malfunction
+  like this, but it needs to be investigated. the pets are 6 and 7
+- I think aging is fucked (I think maybe it wasn't, it was just the system time that was lagging
+  behind)
 - Eggs can lay eggs
-- When the pet slot in the model is updated the viewupdater needs to be told, or I have to
+- When the pet slot in the model is updated the ViewUpdater needs to be told, or I have to
   figure out another clever way to get it to update whenever things happen.
 
 Ideas:
+- Baby eggs. All babies have a very small chance of laying a baby-egg
+- It might be cool for the family tree view that the player can keep several eggs at the time. Then
+  I could make some types that are dead ends, and you need to have kept an egg from an earlier
+  generation if you want to keep the lineage going. Then I could also make achievements that rely
+  on getting many types in the same family tree.
+- I could make the pets have an undefined number of evolutions and navigate the graph of types like
+  a linked list. Each type has a list of possible evolutions with accompanying weights.
 - Could do an envelope class for the Pets so that pets can evolve on their own. Not sure.
 - If I make an egg-shop that both buys and sells eggs, I could make events that happen when you sell
   specific eggs. These events could give you access to certain things like equipment and other shops

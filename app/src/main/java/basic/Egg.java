@@ -34,6 +34,12 @@ public abstract class Egg extends Pet{
     }
 
     @Override
+    public boolean checkForEggLaying(){
+        // Do nothing. Eggs don't lay eggs.
+        return false;
+    }
+
+    @Override
     public Pet evolve(){
         birthtime = lastTimeCheck;
         return super.evolve();

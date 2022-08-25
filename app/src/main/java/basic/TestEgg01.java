@@ -15,5 +15,4 @@ public class TestEgg01 extends Egg{
         super(stats);
         setType("TestEgg01");
     }
-
 }

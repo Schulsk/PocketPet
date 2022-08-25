@@ -20,15 +20,12 @@ public abstract class Pet{
 
     // Health stuff
     private boolean alive, starving, full;
-    protected long birthtime, eggBirthtime, deathtime, age;
-    protected long maxAge;
-    private long totalTimeStarving;
-    private long totalTimeFull;
+    protected long birthtime, eggBirthtime, deathtime, age, maxAge;
+    private long totalTimeStarving, totalTimeFull;
     private double starveThreshold, fullThreshold;       // Percent %
 
     // Hunger
-    private long hunger, maxHunger;
-    private long lastFed;
+    private long hunger, maxHunger, lastFed;
 
     // Positions
     private PlayPen playPen;
@@ -36,15 +33,14 @@ public abstract class Pet{
     private int posY;
 
     // Egg stuff
-    private String egg;
+    protected String egg;
     private double[] eggLayingTimes;    // Percentages of the adult stage's max
 
     // Other
-    private long timesADay;
-    private long step;
+    private long timesADay, step;
     protected long lastTimeCheck;
     private String parent;
-    private String[] children = new String[3];
+    protected String[] children = new String[3];
     //private HashMap<String, Pet> children;
     private int id;
     protected boolean evolving;
@@ -77,7 +73,10 @@ public abstract class Pet{
         eggLayingTimes[0] = random.nextDouble();
         id = petCount++;
         eggTime = TimeConverter.hoursToMillis(6);
-
+        //babyTime = TimeConverter.daysToMillis(1);
+        //childTime = TimeConverter.daysToMillis(1);
+        //adultTime = TimeConverter.daysToMillis(1);
+        onCreate();
     }
     // Loading a pet from file
     public Pet(HashMap<String, String> stats){
@@ -109,9 +108,19 @@ public abstract class Pet{
         parent = stats.get("parent");
         children[0] = stats.get("children");
         eggTime = Long.parseLong(stats.get("eggTime"));
+        babyTime = Long.parseLong(stats.get("babyTime"));
+        childTime = Long.parseLong(stats.get("childTime"));
+        adultTime = Long.parseLong(stats.get("adultTime"));
 
         // Do catchup in case player has been gone for a while
         catchUp();
+    }
+
+    public void onCreate(){
+        /** Do stuff like adjust stageTimes and stuff like that, that is only supposed to happen once
+         * upon creation (or evolution). Not done in the non-stats constructor because when they evolve,
+         * the stats-constructor is used */
+        // Supposed to be overridden in each specific type
     }
 
     // Update
@@ -158,6 +167,9 @@ public abstract class Pet{
     }
     /** Todo: God damn idiot. This catchup thing clearly has to go in the model section, so that the
      *  entire system simulates the time that has passed.*/
+    /** Actually, there's probably a reason why I made it here. I think it is so that when I
+     * load a pet, it automatically catches up. But I think I will move it still, so that if I
+     * decide to make plants and stuff, it'll be easier. */
     public void catchUp(){
         long currentTime = System.currentTimeMillis();
         long simulatedTime = lastTimeCheck;
@@ -183,6 +195,7 @@ public abstract class Pet{
         }
         string += "\nBirthtime: " + birthtime;
         string += "\nLast Timecheck: " + lastTimeCheck;
+        string += "\nTime: " + System.currentTimeMillis();
         string += "\nLastFed: " + lastFed;
         // string += "\nTime since last fed: " + TimeConverter.toString(hungerCounter) + " : " + hungerCounter;
         string += "\nHunger: " + hunger + " Time left: " + TimeConverter.toString(hunger);
@@ -265,6 +278,9 @@ public abstract class Pet{
         string += "\n" + "egg " + egg;
         string += "\n" + "eggLayingTimes " + eggLayingTimes[0];
         string += "\n" + "eggTime " + eggTime;
+        string += "\n" + "babyTime " + babyTime;
+        string += "\n" + "childTime " + childTime;
+        string += "\n" + "adultTime " + adultTime;
 
         /*
         string += "\n" + "children ";
@@ -372,10 +388,12 @@ public abstract class Pet{
 
 
     // Egg stuff
+    // It returns true when an egg has been laid
     public boolean checkForEggLaying(){
         for (int i = 0; i < eggLayingTimes.length; i++){
             if (eggLayingTimes[i] != 0){
-                if (age >= maxAge * eggLayingTimes[i]){
+                // I'm making the egglaying time be a percentage of the pet's adult life
+                if (age >= babyTime + childTime + (adultTime * eggLayingTimes[i])){
                     layEgg();
                     eggLayingTimes[i] = 0;
                     return true;
@@ -446,9 +464,9 @@ public abstract class Pet{
         this.type = type;
     }
 
-    private void setValuesNotInFile(){
-        maxAge = 259200000;
-        maxHunger = 80000000;
+    protected void setValuesNotInFile(){
+        maxAge = TimeConverter.daysToMillis(3);
+        maxHunger = TimeConverter.hoursToMillis(22);
         age = 0;
         starveThreshold = 0.2;
         fullThreshold = 0.8;

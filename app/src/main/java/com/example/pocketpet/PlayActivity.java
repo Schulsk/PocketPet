@@ -14,6 +14,7 @@ import basic.Controller;
 import basic.General;
 
 import ViewUpdate.ViewUpdate;
+import basic.NormalEgg;
 import basic.Pet;
 import basic.Saver;
 import basic.TestEgg01;
@@ -79,6 +80,7 @@ public class PlayActivity extends AppCompatActivity {
             public void onClick(View v){
                 Pet pet = controller.getPet();
                 System.out.println("Pet: " + pet);
+                /*
                 if (pet != null){
                     if (!pet.getState().equals("happy")){
                         pet.setState("happy");
@@ -89,6 +91,7 @@ public class PlayActivity extends AppCompatActivity {
                         System.out.println("idle");
                     }
                 }
+                 */
                 pet.getStats();
             }
         });
@@ -97,7 +100,7 @@ public class PlayActivity extends AppCompatActivity {
         newPetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Pet newPet = new TestEgg01(controller.getTime(), "null");
+                Pet newPet = new NormalEgg(controller.getTime(), "null");
                 System.out.println(newPet.getSavefileName());
                 Saver.savePet(newPet);
                 controller.loadPetSlot(newPet.getSavefileName());

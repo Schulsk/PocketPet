@@ -10,6 +10,9 @@ import com.example.pocketpet.R;
 
 import java.lang.Runnable;
 
+import basic.Beaky;
+import basic.BeakyBaby;
+import basic.BeakyChild;
 import basic.Egg;
 import basic.Pet;
 import basic.Model;
@@ -63,28 +66,105 @@ public class ViewUpdate implements Runnable{
                     if (pet instanceof Egg){
                         resource = R.drawable.egg_idle_animation;
                     }
-                    else if (petState.equals("idle")){
-                        resource = R.drawable.beaky_idle_animation;
-                        System.out.println("Pet state idle");
+                    else if (pet instanceof BeakyBaby){
+                        if (petState.equals("idle")){
+                            resource = R.drawable.beakybaby_idle_animation;
+                            System.out.println("Pet state idle");
+                        }
+                        else if (petState.equals("angry")){
+                            resource = R.drawable.beakybaby_angry_animation;
+                        }
+                        else if (petState.equals("sad")){
+                            resource = R.drawable.beakybaby_sad_animation;
+                        }
+                        else if (petState.equals("happy")){
+                            resource = R.drawable.beakybaby_happy_animation;
+                            System.out.println("Pet state happy");
+                        }
+                        else if (petState.equals("walk")){
+                            resource = R.drawable.beakybaby_walk_animation;
+                        }
+                        else if (petState.equals("dead")){
+                            resource = R.drawable.beakybaby_dead_animation;
+                        }
+                        else if (petState.equals("eating")){
+                            resource = R.drawable.beakybaby_eat_animation;
+                        }
                     }
-                    else if (petState.equals("angry")){
-                        resource = R.drawable.beaky_angry_animation;
+                    else if (pet instanceof BeakyChild){
+                        if (petState.equals("idle")){
+                            resource = R.drawable.beakychild_idle_animation;
+                            System.out.println("Pet state idle");
+                        }
+                        else if (petState.equals("angry")){
+                            resource = R.drawable.beakychild_angry_animation;
+                        }
+                        else if (petState.equals("sad")){
+                            resource = R.drawable.beakychild_sad_animation;
+                        }
+                        else if (petState.equals("happy")){
+                            resource = R.drawable.beakychild_happy_animation;
+                            System.out.println("Pet state happy");
+                        }
+                        else if (petState.equals("walk")){
+                            resource = R.drawable.beakychild_walk_animation;
+                        }
+                        else if (petState.equals("dead")){
+                            resource = R.drawable.beakychild_dead_animation;
+                        }
+                        else if (petState.equals("eating")){
+                            resource = R.drawable.beakychild_eat_animation;
+                        }
                     }
-                    else if (petState.equals("sad")){
-                        resource = R.drawable.beaky_sad_animation;
+                    else if (pet instanceof Beaky){
+                        if (petState.equals("idle")){
+                            resource = R.drawable.beaky_idle_animation;
+                            System.out.println("Pet state idle");
+                        }
+                        else if (petState.equals("angry")){
+                            resource = R.drawable.beaky_angry_animation;
+                        }
+                        else if (petState.equals("sad")){
+                            resource = R.drawable.beaky_sad_animation;
+                        }
+                        else if (petState.equals("happy")){
+                            resource = R.drawable.beaky_happy_animation;
+                            System.out.println("Pet state happy");
+                        }
+                        else if (petState.equals("walk")){
+                            resource = R.drawable.beaky_walk_animation;
+                        }
+                        else if (petState.equals("dead")){
+                            resource = R.drawable.beaky_dead_animation;
+                        }
+                        else if (petState.equals("eating")){
+                            resource = R.drawable.beaky_eat_animation;
+                        }
                     }
-                    else if (petState.equals("happy")){
-                        resource = R.drawable.beaky_happy_animation;
-                        System.out.println("Pet state happy");
-                    }
-                    else if (petState.equals("walk")){
-                        resource = R.drawable.beaky_walk_animation;
-                    }
-                    else if (petState.equals("dead")){
-                        resource = R.drawable.beaky_dead_animation;
-                    }
-                    else if (petState.equals("eating")){
-                        resource = R.drawable.beaky_walk_animation;
+                    else{
+                        if (petState.equals("idle")){
+                            resource = R.drawable.beaky_idle_animation;
+                            System.out.println("Pet state idle");
+                        }
+                        else if (petState.equals("angry")){
+                            resource = R.drawable.beaky_angry_animation;
+                        }
+                        else if (petState.equals("sad")){
+                            resource = R.drawable.beaky_sad_animation;
+                        }
+                        else if (petState.equals("happy")){
+                            resource = R.drawable.beaky_happy_animation;
+                            System.out.println("Pet state happy");
+                        }
+                        else if (petState.equals("walk")){
+                            resource = R.drawable.beaky_walk_animation;
+                        }
+                        else if (petState.equals("dead")){
+                            resource = R.drawable.beaky_dead_animation;
+                        }
+                        else if (petState.equals("eating")){
+                            resource = R.drawable.beaky_eat_animation;
+                        }
                     }
                 }
 
