@@ -20,7 +20,7 @@ public class Model{
     private Inventory inventory;
 
     public Model(){
-        // Checking for savefile
+        // Checking for savefile and making the directory and savefile structure if it's not there
         Scanner scanner = null;
         try{
             scanner = new Scanner(savefile);

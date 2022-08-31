@@ -16,8 +16,11 @@ public class BeakyBaby extends Baby{
 
     @Override
     public void onCreate(){
+        /*
         babyTime += TimeConverter.secondsToMillis(0);
         childTime += TimeConverter.secondsToMillis(15);
         adultTime += TimeConverter.secondsToMillis(30);
+
+         */
     }
 }

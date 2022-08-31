@@ -6,7 +6,6 @@ public class NormalEgg extends Egg{
     public NormalEgg(long currentTime, String parentName){
         super(currentTime, parentName);
         setType("NormalEgg");
-        eggTime = TimeConverter.secondsToMillis(30);
     }
 
     public NormalEgg(HashMap<String, String> stats) {
@@ -22,8 +21,9 @@ public class NormalEgg extends Egg{
 
     @Override
     public void onCreate(){
-        babyTime = TimeConverter.secondsToMillis(30);
-        childTime = TimeConverter.secondsToMillis(30);
-        adultTime = TimeConverter.secondsToMillis(30);
+        eggTime = TimeConverter.secondsToMillis(10);
+        babyTime = TimeConverter.secondsToMillis(10);
+        childTime = TimeConverter.secondsToMillis(10);
+        adultTime = TimeConverter.secondsToMillis(10);
     }
 }

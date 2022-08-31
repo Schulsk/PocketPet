@@ -49,6 +49,9 @@ public abstract class Pet{
     private String state = "idle";
     private long stateCounter;
 
+    // Animation stuff
+    private HashMap<String, Integer> animations;
+
     private static int petCount = 0;        // I think maybe the model should handle this
 
     // Creating a new pet
@@ -480,6 +483,8 @@ public abstract class Pet{
         step = 1000;
         eggLayingTimes = new double[3];
         evolving = false;
+
+        setAnimationSet(Animation.getAnimationSet(this));
     }
 
     // might delete this
@@ -495,6 +500,16 @@ public abstract class Pet{
 
     public boolean isReadyToEvolve(){
         return evolving;
+    }
+
+
+    // Animation
+    public void setAnimationSet(HashMap<String, Integer> animations){
+        this.animations = animations;
+    }
+
+    public int getAnimation(String animation){
+        return animations.get(animation);
     }
 
 

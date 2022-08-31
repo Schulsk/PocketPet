@@ -15,6 +15,9 @@ public class Beaky extends Adult{
 
     @Override
     public void onCreate(){
+        /*
         adultTime += TimeConverter.secondsToMillis(30);
+
+         */
     }
 }

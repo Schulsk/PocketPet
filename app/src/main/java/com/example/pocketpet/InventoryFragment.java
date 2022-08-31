@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
 import basic.Controller;
@@ -64,8 +67,27 @@ public class InventoryFragment extends Fragment {
                 // Temp solution
                 if (!button01.getText().equals("--empty--")){
                     Controller controller = viewModel.getControllerLiveData().getValue();
-                    String eggName = controller.withdraw(0);
-                    controller.changePet(eggName);
+                    String eggName = controller.getInventory().readSlotContent(0);
+                    //controller.changePet(eggName);
+
+                    /*
+                    getParentFragmentManager().setFragmentResultListener("petName", (LifecycleOwner) v, new FragmentResultListener() {
+                        @Override
+                        public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+                            String result = bundle.getString("petName");
+                        }
+                    });
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("param1", eggName);
+                    getParentFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .add(R.id.fragmentContainerView, PetInspectionFragment.class, bundle)
+                            .commit();
+
+                     */
+
+                    openPetInspectionFragment(eggName);
                 }
             }
         });
@@ -106,5 +128,21 @@ public class InventoryFragment extends Fragment {
         else{
             button.setText(slotContent);
         }
+    }
+
+    private void openPetInspectionFragment(String eggName){
+        getParentFragmentManager().setFragmentResultListener("petName", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+                String result = bundle.getString("petName");
+            }
+        });
+
+        Bundle bundle = new Bundle();
+        bundle.putString("param1", eggName);
+        getParentFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.fragmentContainerView, PetInspectionFragment.class, bundle)
+                .commit();
     }
 }

@@ -1,4 +1,8 @@
 Todo:
+- Make a class or some other system for fetching the graphics of a specific class for use in both
+  the PetInspectionFragment and in the animation system. If I make a class, I could give the Pet
+  class methods for setting the drawable resources for each animation that an animation class can
+  call and set based on the type.
 - Make the inventory close itself when you click a button that loads a new pet
 - Make a system for when each stage/type is going to evolve. A max age for each of the evolutionary
   stages
@@ -18,9 +22,13 @@ Done:
 - Add loading whenever it starts back up
 
 Issues:
+- Could freeze if there is too much time since I logged in. Don't know why, it probably has something
+  to do with the catchup in the pet
 - I think I had an error here where the emulator was not in focus (don't know if that is
   relevant) and the egg was laid, but the inventory slot was apparently null (Inventory.java:75)
   Really not sure what happened there.
+  Update: It seems to be when the inventory is used more than once, so when the pet lays an egg, it
+  is loaded from inventory, and another egg is laid in the same session.
 - Had an error with an egg being born without it being caught by the inventory. Also the egg is
   supposed to have been born way before it should have been. Checking things, it seems that it
   looks weird because it was born from another egg. Not sure why that should make it malfunction

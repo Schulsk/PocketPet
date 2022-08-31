@@ -97,9 +97,7 @@ public class Inventory{
     // Fetching
     public String withdraw(int index){
         try{
-            String temp = eggSlots[index].removeItem();
-            eggSlots[index] = null;
-            return temp;
+            return eggSlots[index].removeItem();
         }
         catch(Exception e){
             System.out.println("Index out of bounds");

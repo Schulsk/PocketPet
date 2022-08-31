@@ -193,7 +193,7 @@ public class PlayActivity extends AppCompatActivity {
     /**     Updating views      */
     // I'm doing it this way because of an error I got that said only the thread that made a view
     // hierarchy could touch its views
-    // Update: Unecesary it seems, but it's here in case I change my mind
+    // Update: Unnecessary it seems, but it's here in case I change my mind
     public void updatePetView(int resource){
         ImageView petView = findViewById(R.id.pet_view);
         petView.setBackgroundResource(resource);
