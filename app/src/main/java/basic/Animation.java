@@ -13,6 +13,7 @@ public class Animation {
 
     public static HashMap<String, Integer> getAnimationSet(Pet pet){
         HashMap<String, Integer> animationSet = new HashMap<>();
+        // Egg
         if (pet instanceof NormalEgg){
             animationSet.put("angry", R.drawable.egg_idle_animation);
             animationSet.put("dead", R.drawable.egg_idle_animation);
@@ -22,6 +23,7 @@ public class Animation {
             animationSet.put("sad", R.drawable.egg_idle_animation);
             animationSet.put("walk", R.drawable.egg_idle_animation);
         }
+        // Baby
         else if (pet instanceof BeakyBaby){
             animationSet.put("angry", R.drawable.beakybaby_angry_animation);
             animationSet.put("dead", R.drawable.beakybaby_dead_animation);
@@ -31,6 +33,7 @@ public class Animation {
             animationSet.put("sad", R.drawable.beakybaby_sad_animation);
             animationSet.put("walk", R.drawable.beakybaby_walk_animation);
         }
+        // Child
         else if (pet instanceof BeakyChild){
             animationSet.put("angry", R.drawable.beakychild_angry_animation);
             animationSet.put("dead", R.drawable.beakychild_dead_animation);
@@ -40,6 +43,7 @@ public class Animation {
             animationSet.put("sad", R.drawable.beakychild_sad_animation);
             animationSet.put("walk", R.drawable.beakychild_walk_animation);
         }
+        // Adult
         else if (pet instanceof Beaky){
             animationSet.put("angry", R.drawable.beaky_angry_animation);
             animationSet.put("dead", R.drawable.beaky_dead_animation);
@@ -51,5 +55,14 @@ public class Animation {
         }
 
         return animationSet;
+    }
+
+    public static int getAnimation(String type){
+        // This is very incomplete and not fully thought through
+        int resource = 0;
+        if (type.equals("NormalEgg")){
+            resource = R.drawable.egg_idle_animation;
+        }
+        return resource;
     }
 }

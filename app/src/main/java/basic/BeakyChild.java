@@ -15,6 +15,7 @@ public class BeakyChild extends Child{
 
     @Override
     public void onCreate(){
+        super.onCreate();
         /*
         babyTime += TimeConverter.secondsToMillis(0);
         childTime += TimeConverter.secondsToMillis(15);

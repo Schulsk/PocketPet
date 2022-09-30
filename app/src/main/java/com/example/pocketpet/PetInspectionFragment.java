@@ -2,8 +2,11 @@ package com.example.pocketpet;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -11,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
@@ -18,6 +22,8 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import basic.Animation;
+import basic.Controller;
 import basic.Saver;
 
 /**
@@ -89,6 +95,10 @@ public class PetInspectionFragment extends Fragment {
 
         // TextView setup
         TextView petNameView = view.findViewById(R.id.pet_name);
+        TextView petTypeView = view.findViewById(R.id.pet_type);
+        TextView petParentView = view.findViewById(R.id.pet_parent);
+        TextView petBirthtimeView = view.findViewById(R.id.pet_birthtime);
+        ImageView petImageView = view.findViewById(R.id.pet_image);
 
         /** Working here.*/
         // get the file of the pet that this thing was started with (petNameView that I am trying to send via the bundle)
@@ -114,10 +124,40 @@ public class PetInspectionFragment extends Fragment {
         }
 
         petNameView.setText(stats.get("name"));
+        petTypeView.setText(stats.get("type"));
+        petParentView.setText("Parent: " + stats.get("parent"));
+        petBirthtimeView.setText("Birth time: " + stats.get("birthtime"));
+        petImageView.setBackgroundResource(Animation.getAnimation(stats.get("type")));
 
 
         // Button setup
         Button incubateButton = view.findViewById(R.id.button_incubate);
         Button sellButton = view.findViewById(R.id.button_sell);
+
+        incubateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Controller controller = viewModel.getControllerLiveData().getValue();
+                String eggName = controller.getInventory().readSlotContent(0);
+                //controller.changePet(eggName);
+                    /*
+
+                    getParentFragmentManager().setFragmentResultListener("petName", (LifecycleOwner) v, new FragmentResultListener() {
+                        @Override
+                        public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle bundle) {
+                            String result = bundle.getString("petName");
+                        }
+                    });
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("param1", eggName);
+                    getParentFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .add(R.id.fragmentContainerView, PetInspectionFragment.class, bundle)
+                            .commit();
+                    */
+
+            }
+        });
     }
 }

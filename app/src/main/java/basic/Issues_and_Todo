@@ -1,4 +1,8 @@
 Todo:
+- I think I should make a simulation thread that deals with the whole simulation thing, then the
+  main thread only deals with presenting stuff. The problem I have now is that if I have been gone
+  too long the whole thing crashes and breaks the emulated phone somehow because the catchup takes
+  too long.
 - Make a class or some other system for fetching the graphics of a specific class for use in both
   the PetInspectionFragment and in the animation system. If I make a class, I could give the Pet
   class methods for setting the drawable resources for each animation that an animation class can
